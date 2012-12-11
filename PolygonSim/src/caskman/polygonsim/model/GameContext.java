@@ -1,5 +1,7 @@
 package caskman.polygonsim.model;
 
-public class GameContext {
+import java.util.List;
 
+public class GameContext {
+	public List<Mob> removals;
 }

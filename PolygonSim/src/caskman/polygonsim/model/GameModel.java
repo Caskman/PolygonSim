@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import caskman.polygonsim.model.entities.Dot;
+import caskman.polygonsim.model.entities.Explosion;
 
 
 public class GameModel {
@@ -17,7 +18,9 @@ public class GameModel {
 	private float dotRatio = .0001F;
 	private float dotMaxVel = 20;
 	private List<Mob> dots;
+	private List<Mob> explosions;
 	private QuadTree q;
+	
 	
 	public GameModel(Dimension screenDims) {
 		this.screenDims = screenDims;
@@ -27,6 +30,10 @@ public class GameModel {
 	
 	public Dimension getScreenDims() {
 		return screenDims;
+	}
+	
+	public Random getRandom() {
+		return r;
 	}
 	
 	private void initialize() {
@@ -42,6 +49,7 @@ public class GameModel {
 			dots.add(new Dot(this,xPos,yPos,xVel,yVel));
 		}
 		
+		explosions = new ArrayList<Mob>();
 		q = new QuadTree(screenDims,5);
 	}
 	
@@ -49,9 +57,28 @@ public class GameModel {
 		
 		updateQuadTree();
 		
+		GameContext g = getGameContext();
+		
 		for (Mob m : dots) {
-			m.update(null);
+			m.update(g);
 		}
+		for (Mob m : explosions) {
+			m.update(g);
+		}
+		
+		for (Mob m : g.removals) {
+			explosions.remove(m);
+		}
+		
+		if (r.nextFloat() < .1F)
+			explosions.add(new Explosion(this,r.nextFloat()*(float)screenDims.width,r.nextFloat()*(float)screenDims.height));
+		
+	}
+	
+	private GameContext getGameContext() {
+		GameContext g = new GameContext();
+		g.removals = new ArrayList<Mob>();
+		return g;
 	}
 	
 	private void updateQuadTree() {
@@ -59,12 +86,16 @@ public class GameModel {
 		for (Mob m : dots) {
 			q.insert((Collidable)m);
 		}
+		
 	}
 	
 	public void draw(Graphics g,float interpol) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, screenDims.width, screenDims.height);
 		for (Mob m : dots) {
+			m.draw(g,interpol);
+		}
+		for (Mob m : explosions) {
 			m.draw(g,interpol);
 		}
 		q.draw(g);

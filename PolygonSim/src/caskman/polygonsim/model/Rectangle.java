@@ -1,5 +1,6 @@
 package caskman.polygonsim.model;
 
+
 public class Rectangle {
 	private int width;
 	private int height;
@@ -11,6 +12,13 @@ public class Rectangle {
 		this.y = y;
 		this.width = width;
 		this.height = height;
+	}
+	
+	public Rectangle(float x,float y, float width,float height) {
+		this.x = (int)x;
+		this.y = (int)y;
+		this.width = (int)width;
+		this.height = (int)height;
 	}
 	
 	public int top() {
@@ -43,5 +51,9 @@ public class Rectangle {
 	
 	public int height() {
 		return height;
+	}
+	
+	public String toString() {
+		return "["+x+","+y+","+right()+","+bottom()+"]";
 	}
 }

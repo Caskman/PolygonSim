@@ -1,5 +1,6 @@
 package caskman.polygonsim.model;
 
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -20,14 +21,14 @@ public class QuadTree {
 	private int MAX_LEVELS;
 	private int MAX_OBJECTS = 10;
 	
-	public QuadTree(Dimension screenDims,Dimension largest) {
-		int dimTarget = ((largest.width < largest.height)?largest.height:largest.width)<<3;
-		int screenDim = (screenDims.height < screenDims.width)?screenDims.height:screenDims.width;
-		int i;
-		for (i = 0; screenDim > dimTarget; i++) {
-			screenDim = screenDim >> 1;
-		}
-		MAX_LEVELS = i;
+	public QuadTree(Dimension screenDims,int maxLevels) {
+//		int dimTarget = ((largest.width < largest.height)?largest.height:largest.width)<<3;
+//		int screenDim = (screenDims.height < screenDims.width)?screenDims.height:screenDims.width;
+//		int i;
+//		for (i = 0; screenDim > dimTarget; i++) {
+//			screenDim = screenDim >> 1;
+//		}
+		MAX_LEVELS = maxLevels;
 		initialize(0,new Rectangle(0,0,screenDims.width,screenDims.height));
 	}
 	
@@ -44,11 +45,6 @@ public class QuadTree {
 		for (int i = 0; i < 4; i++) {
 			nodes.add(null);
 		}
-//		if (paint == null) {
-//			paint = new Paint();
-//			paint.setColor(0xffffffff);
-//			paint.setStyle(Style.STROKE);
-//		}
 	}
 	
 	public void draw(Graphics g) {
@@ -76,10 +72,10 @@ public class QuadTree {
 		int subHeight = bounds.height()>>1;
 		int x = bounds.left();
 		int y = bounds.top();
-		nodes.set(0,new QuadTree(level + 1,new Rectangle(x+subHeight,y,x+(subHeight<<1),y + (subWidth)),MAX_LEVELS));
-		nodes.set(1,new QuadTree(level + 1,new Rectangle(x,y,x+(subHeight),y + (subWidth)),MAX_LEVELS));
-		nodes.set(2,new QuadTree(level + 1,new Rectangle(x,y+subWidth,x+(subHeight),y + (subWidth<<1)),MAX_LEVELS));
-		nodes.set(3,new QuadTree(level + 1,new Rectangle(x+subHeight,y+subWidth,x+(subHeight<<1),y + (subWidth<<1)),MAX_LEVELS));
+		nodes.set(0,new QuadTree(level + 1,new Rectangle(x+subHeight,y,subHeight,subWidth),MAX_LEVELS));
+		nodes.set(1,new QuadTree(level + 1,new Rectangle(x,y,subHeight,subWidth),MAX_LEVELS));
+		nodes.set(2,new QuadTree(level + 1,new Rectangle(x,y+subWidth,subHeight,subWidth),MAX_LEVELS));
+		nodes.set(3,new QuadTree(level + 1,new Rectangle(x+subHeight,y+subWidth,subHeight,subWidth),MAX_LEVELS));
 	}
 	
 	private int getIndex(Collidable c) {

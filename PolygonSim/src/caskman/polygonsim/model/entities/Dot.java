@@ -4,15 +4,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import caskman.polygonsim.model.Collidable;
 import caskman.polygonsim.model.GameContext;
 import caskman.polygonsim.model.GameModel;
 import caskman.polygonsim.model.Mob;
+import caskman.polygonsim.model.Rectangle;
 import caskman.polygonsim.model.Vector;
 
 
-public class Dot extends Mob {
+public class Dot extends Mob implements Collidable {
 	
-	private static Dimension dims = new Dimension(10,10);
+	public static Dimension dims = new Dimension(10,10);
 
 	public Dot(GameModel m,float xPos,float yPos,float xVel,float yVel) {
 		super(m);
@@ -43,6 +45,35 @@ public class Dot extends Mob {
 		int y = (int) (getY() + getYVel()*interpol);
 		g.setColor(Color.red);
 		g.fillRect(x, y, dims.width, dims.height);
+	}
+
+	@Override
+	public void setTempNextPosition(float percent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Vector getTempPosition() {
+		//TODO
+		return null;
+	}
+
+	@Override
+	public Rectangle getAABB() {
+		return new Rectangle(position.x,position.y,position.x + dims.width,position.y + dims.height);
+	}
+
+	@Override
+	public Vector getVelocity() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Dimension getDims() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

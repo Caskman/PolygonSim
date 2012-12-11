@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 
+import caskman.polygonsim.MainThread;
 import caskman.polygonsim.model.Collidable;
 import caskman.polygonsim.model.GameContext;
 import caskman.polygonsim.model.GameModel;
@@ -16,14 +17,19 @@ public class Dot extends CollidableMob {
 	public static Dimension dims = new Dimension(6,6);
 	private Color color;
 	private boolean isDead;
+	static int MAX_GHOST_DURATION = (int) (MainThread.FPS*.5F);
+	boolean isGhost;
+	int ghostDuration;
 
-	public Dot(GameModel m,float xPos,float yPos,float xVel,float yVel) {
+	public Dot(GameModel m,float xPos,float yPos,float xVel,float yVel,boolean startAsGhost) {
 		super(m);
 		
 		position = new Vector(xPos,yPos);
 		velocity = new Vector(xVel,yVel);
 		color = Color.RED;
 		isDead = false;
+		isGhost = startAsGhost;
+		ghostDuration = 0;
 	}
 	
 	public void setColor(Color color) {
@@ -34,6 +40,8 @@ public class Dot extends CollidableMob {
 	protected void update(GameContext g) {
 		if (isDead)
 			return;
+		if (ghostDuration > MAX_GHOST_DURATION)
+			isGhost = false;
 		color = Color.RED;
 		Vector newPos = Vector.add(position, velocity);
 		
@@ -46,13 +54,17 @@ public class Dot extends CollidableMob {
 			position.y = (newPos.y < 0)?0:model.getScreenDims().height - dims.height;
 		}
 		position = Vector.add(position, velocity);
+		ghostDuration++;
 	}
 
 	@Override
 	protected void draw(Graphics2D g, float interpol) {
 		int x = (int) (getX() + getXVel()*interpol);
 		int y = (int) (getY() + getYVel()*interpol);
-		g.setColor(color);
+		if (isGhost)
+			g.setColor(Color.WHITE);
+		else 
+			g.setColor(color);
 //		g.fillArc(x, y, dims.width, dims.height, 0, 360);
 		g.fillRect(x, y, dims.width, dims.height);
 	}
@@ -79,15 +91,19 @@ public class Dot extends CollidableMob {
 	
 	@Override
 	protected void resolveCollision(GameContext g,Collidable c, float percent) {
+		if (isGhost)
+			return;
 		setCollisionPosition(percent);
 		if (c instanceof Dot) {
+			if (((Dot)c).isGhost)
+				return;
 			g.removals.add(this);
 			setDead(true);
 			g.removals.add((Mob)c);
 			((Dot)c).setDead(true);
 			Vector newVel = Vector.add(((Mob)c).velocity,velocity);
 			g.additions.add(new Line(model,position.x,position.y,newVel.x,newVel.y));
-			g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y));
+			g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y,Color.RED));
 		}
 	}
 

@@ -24,7 +24,7 @@ public class Explosion extends Mob {
 	private List<Particle> particles;
 	private int duration;
 
-	public Explosion(GameModel model,float x, float y) {
+	public Explosion(GameModel model,float x, float y,Color explosionColor) {
 		super(model);
 		
 		position = new Vector(x,y);
@@ -35,7 +35,7 @@ public class Explosion extends Mob {
 		
 		for (int i = 0; i < NUM_PARTICLES; i++) {
 			vel = new Vector(r.nextFloat()-0.5F,r.nextFloat()-0.5F);
-			p = new Particle(model,position.x,position.y,r.nextFloat(),vel,Color.WHITE);
+			p = new Particle(model,position.x,position.y,r.nextFloat(),vel,explosionColor);
 			particles.add(p);
 		}
 		

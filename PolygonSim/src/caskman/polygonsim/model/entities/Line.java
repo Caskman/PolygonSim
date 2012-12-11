@@ -3,6 +3,7 @@ package caskman.polygonsim.model.entities;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.util.Random;
 
 import caskman.polygonsim.MainThread;
 import caskman.polygonsim.model.Collidable;
@@ -20,19 +21,23 @@ public class Line extends CollidableMob {
 	static float tpi = 2F*3.14159F;
 	Color color;
 	static int dotSide = 6;
+	boolean isDead;
 
 	public Line(GameModel model,float xPos,float yPos,float xVel,float yVel) {
 		super(model);
 		
 		position = new Vector(xPos,yPos);
 		velocity = new Vector(xVel,yVel);
-		angleSpeed = tpi/(float)MainThread.FPS;
+		angleSpeed = (tpi*model.getRandom().nextFloat())/(float)MainThread.FPS;
 		angle = 0F;
 		color = Color.GREEN;
+		isDead = false;
 	}
 	
 	@Override
 	protected void update(GameContext g) {
+		if (isDead)
+			return;
 		angle = ((angle += angleSpeed) > tpi)?angle - tpi:angle;
 		color = Color.GREEN;
 		
@@ -65,6 +70,8 @@ public class Line extends CollidableMob {
 		int halfDotSide = dotSide >> 1;
 		g.fillRect((int)(point1.x - halfDotSide) , (int)(point1.y - halfDotSide), dotSide, dotSide);
 		g.fillRect((int)(point2.x - halfDotSide) , (int)(point2.y - halfDotSide), dotSide, dotSide);
+//		g.setColor(Color.BLUE);
+//		g.drawRect((int)interpolPosition.x,(int)interpolPosition.y,dims.width,dims.height);
 	}
 
 
@@ -85,7 +92,41 @@ public class Line extends CollidableMob {
 
 	@Override
 	protected void resolveCollision(GameContext g, Collidable c, float percent) {
-		
+		if (isDead)
+			return;
+		if (c instanceof Line) {
+			Line l = (Line)c;
+			setDead(true);
+			l.setDead(true);
+			setCollisionPosition(percent);
+			
+			g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y,Color.GREEN));
+			g.removals.add(this);
+			g.removals.add(l);
+			
+			Vector totalVelocity = Vector.add(velocity,l.velocity);
+			g.additions.add(new DynamicPolygon(model,collisionPosition.x,collisionPosition.y,totalVelocity.x,totalVelocity.y,3));
+			float xVel = model.dotMaxVel*model.getRandom().nextFloat() - (model.dotMaxVel/2F);
+			float yVel = model.dotMaxVel*model.getRandom().nextFloat() - (model.dotMaxVel/2F);
+			g.additions.add(new Dot(model,collisionPosition.x,collisionPosition.y,xVel,yVel,true));
+//			Random r = model.getRandom();
+//			float maxMag = model.dotMaxVel;
+//			float halfMaxMag = maxMag / 2F;
+//			Vector vel1 = new Vector(maxMag*r.nextFloat() - halfMaxMag,maxMag*r.nextFloat() - halfMaxMag);
+//			Vector vel2 = new Vector(maxMag*r.nextFloat() - halfMaxMag,maxMag*r.nextFloat() - halfMaxMag);
+//			Vector vel3 = new Vector(maxMag*r.nextFloat() - halfMaxMag,maxMag*r.nextFloat() - halfMaxMag);
+//			Vector vel4 = new Vector(maxMag*r.nextFloat() - halfMaxMag,maxMag*r.nextFloat() - halfMaxMag);
+//			
+//			g.additions.add(new Dot(model,collisionPosition.x+2F*vel1.x,collisionPosition.y+2F*vel1.y,vel1.x,vel1.y,true));
+//			g.additions.add(new Dot(model,collisionPosition.x+2F*vel2.x,collisionPosition.y+2F*vel2.y,vel2.x,vel2.y,true));
+//			g.additions.add(new Dot(model,collisionPosition.x+2F*vel3.x,collisionPosition.y+2F*vel3.y,vel3.x,vel3.y,true));
+//			g.additions.add(new Dot(model,collisionPosition.x+2F*vel4.x,collisionPosition.y+2F*vel4.y,vel4.x,vel4.y,true));
+			
+		}
+	}
+	
+	private void setDead(boolean b) {
+		isDead = b;
 	}
 
 }

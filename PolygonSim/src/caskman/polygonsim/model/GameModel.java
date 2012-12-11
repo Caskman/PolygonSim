@@ -130,6 +130,24 @@ public class GameModel {
 				// TODO Auto-generated method stub
 				return false;
 			}
+
+			@Override
+			public void setVelocity(Vector v) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void setPosition(Vector v) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public Vector getCollisionPosition() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		});
 		for (Collidable c : toChange) {
 			((Dot)c).setColor(Color.WHITE);

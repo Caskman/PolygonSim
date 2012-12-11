@@ -33,6 +33,10 @@ public class Dot extends CollidableMob {
 	@Override
 	protected void update(GameContext g) {
 		color = Color.RED;
+		
+		if (isResolved())
+			return;
+		
 		Vector newPos = Vector.add(position, velocity);
 		
 		if (newPos.x < 0 || newPos.x > model.getScreenDims().width - dims.width) {
@@ -78,7 +82,38 @@ public class Dot extends CollidableMob {
 	@Override
 	protected void resolveCollision(GameContext g,Collidable c, float percent) {
 		setCollisionPosition(percent);
-		g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y));
+		c.setCollisionPosition(percent);
+		
+		Rectangle r1 = getCollisionAABB();
+		Rectangle r2 = c.getCollisionAABB();
+		
+		Vector v1 = getVelocity();
+		Vector v2 = c.getVelocity();
+		
+		boolean xCollision = r1.right() > r2.left() && r1.left() < r2.right();
+		boolean yCollision = r1.bottom() > r2.top() && r1.top() < r2.bottom();
+		float temp;
+		
+		if (xCollision) {
+			temp = v1.x;
+			v1.x = v2.x;
+			v2.x = temp;
+		}
+		
+		if (yCollision) {
+			temp = v1.y;
+			v1.y = v2.y;
+			v2.y = temp;
+		}
+		
+		setVelocity(v1);
+		c.setVelocity(v2);
+		
+		Vector p1 = getCollisionPosition();
+		Vector p2 = c.getCollisionPosition();
+		
+		setPosition(Vector.add(Vector.scalar(1F-percent, v1),p1));
+		c.setPosition(Vector.add(Vector.scalar(1F-percent, v2),p2));
 	}
 
 	@Override

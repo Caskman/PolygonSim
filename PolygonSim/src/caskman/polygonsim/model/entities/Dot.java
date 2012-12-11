@@ -13,7 +13,7 @@ import caskman.polygonsim.model.Vector;
 
 public class Dot extends CollidableMob {
 	
-	public static Dimension dims = new Dimension(10,10);
+	public static Dimension dims = new Dimension(6,6);
 	private Color color;
 	private boolean isResolved;
 	private boolean isDead;
@@ -55,7 +55,8 @@ public class Dot extends CollidableMob {
 		int x = (int) (getX() + getXVel()*interpol);
 		int y = (int) (getY() + getYVel()*interpol);
 		g.setColor(color);
-		g.fillRect(x, y, dims.width, dims.height);
+		g.fillArc(x, y, dims.width, dims.height, 0, 360);
+//		g.fillRect(x, y, dims.width, dims.height);
 	}
 
 	@Override
@@ -90,7 +91,9 @@ public class Dot extends CollidableMob {
 			setDead(true);
 			g.removals.add((Mob)c);
 			((Dot)c).setDead(true);
-			g.additions.add(new Line(model,position.x,position.y,model.getRandom().nextFloat(),model.getRandom().nextFloat()));
+			Vector newVel = Vector.add(((Mob)c).velocity,velocity);
+			g.additions.add(new Line(model,position.x,position.y,newVel.x,newVel.y));
+			g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y));
 		}
 	}
 

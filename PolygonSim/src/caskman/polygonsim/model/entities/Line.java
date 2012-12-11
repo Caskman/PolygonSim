@@ -11,18 +11,18 @@ import caskman.polygonsim.model.Vector;
 
 public class Line extends Mob {
 	
-	static float MAX_VELOCITY = 10F;
+//	static float MAX_VELOCITY = 10F;
 	float angleSpeed;
 	float angle;
-	static Dimension dims = new Dimension(6,6);
+	static Dimension dims = new Dimension(20,20);
 	static float tpi = 2F*3.14159F;
 	Color color;
 
-	public Line(GameModel model,float xPos,float yPos,float xVelPercent,float yVelPercent) {
+	public Line(GameModel model,float xPos,float yPos,float xVel,float yVel) {
 		super(model);
 		
 		position = new Vector(xPos,yPos);
-		velocity = new Vector(MAX_VELOCITY*xVelPercent,MAX_VELOCITY*yVelPercent);
+		velocity = new Vector(xVel,yVel);
 		angleSpeed = tpi/(float)MainThread.FPS;
 		angle = 0F;
 		color = Color.GREEN;
@@ -49,9 +49,12 @@ public class Line extends Mob {
 	@Override
 	protected void draw(Graphics2D g, float interpol) {
 		float radius = dims.width>>1;
-		Vector lineDirection = new Vector((float)(radius*Math.cos(angle)),(float)(radius*Math.sin(angle)));
-		Vector p1 = Vector.add(position,lineDirection);
-		Vector p2 = Vector.add(position,Vector.scalar(-1F,lineDirection));
+		float interpolAngle = angle + angleSpeed*interpol;
+		Vector interpolPosition = Vector.add(position,Vector.scalar(interpol,velocity));
+		
+		Vector lineDirection = new Vector((float)(radius*Math.cos(interpolAngle)),(float)(radius*Math.sin(interpolAngle)));
+		Vector p1 = Vector.add(interpolPosition,lineDirection);
+		Vector p2 = Vector.add(interpolPosition,Vector.scalar(-1F,lineDirection));
 		g.setColor(color);
 		g.drawLine((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
 	}

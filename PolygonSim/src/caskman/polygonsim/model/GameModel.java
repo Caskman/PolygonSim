@@ -11,6 +11,7 @@ import java.util.Random;
 
 import caskman.polygonsim.InputListener;
 import caskman.polygonsim.model.entities.Dot;
+import caskman.polygonsim.model.entities.Explosion;
 import caskman.polygonsim.model.entities.Line;
 import caskman.polygonsim.model.entities.Mob;
 
@@ -23,7 +24,7 @@ public class GameModel {
 	private float dotMaxVel = 20;
 	private List<Mob> dots;
 	private List<Mob> lines;
-//	private List<Mob> explosions;
+	private List<Mob> explosions;
 	private QuadTree q;
 	private Vector mousePosition;
 	
@@ -66,7 +67,7 @@ public class GameModel {
 			}
 		});
 		
-//		explosions = new ArrayList<Mob>();
+		explosions = new ArrayList<Mob>();
 		q = new QuadTree(screenDims,5);
 	}
 	
@@ -89,21 +90,22 @@ public class GameModel {
 			m.updateMob(g);
 		}
 		
-//		for (Mob m : explosions) {
-//			m.updateMob(g);
-//		}
+		for (Mob m : explosions) {
+			m.updateMob(g);
+		}
 		
 		for (Mob m : g.removals) {
 			if (m instanceof Dot)
 				dots.remove(m);
-//			explosions.remove(m);
+			else if (m instanceof Explosion)
+				explosions.remove(m);
 		}
 		
 		for (Mob m : g.additions) {
 			if (m instanceof Line)
 				lines.add(m);
-//			if (m instanceof Explosion)
-//				explosions.add(m);
+			else if (m instanceof Explosion)
+				explosions.add(m);
 		}
 		
 		
@@ -137,9 +139,9 @@ public class GameModel {
 		for (Mob m : lines) {
 			m.drawMob(g, interpol);
 		}
-//		for (Mob m : explosions) {
-//			m.drawMob(g,interpol);
-//		}
-		q.draw(g);
+		for (Mob m : explosions) {
+			m.drawMob(g,interpol);
+		}
+//		q.draw(g);
 	}
 }

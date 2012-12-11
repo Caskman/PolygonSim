@@ -3,10 +3,13 @@ package caskman.polygonsim.model;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import caskman.polygonsim.InputListener;
 import caskman.polygonsim.model.entities.Dot;
 import caskman.polygonsim.model.entities.Explosion;
 
@@ -20,12 +23,13 @@ public class GameModel {
 	private List<Mob> dots;
 	private List<Mob> explosions;
 	private QuadTree q;
+	private Vector mousePosition;
 	
 	
-	public GameModel(Dimension screenDims) {
+	public GameModel(Dimension screenDims,InputListener il) {
 		this.screenDims = screenDims;
 		
-		initialize();
+		initialize(il);
 	}
 	
 	public Dimension getScreenDims() {
@@ -36,7 +40,7 @@ public class GameModel {
 		return r;
 	}
 	
-	private void initialize() {
+	private void initialize(InputListener il) {
 		r = new Random();
 		int numBlocks = (int) (screenDims.width*screenDims.height*dotRatio);
 		dots = new ArrayList<Mob>(numBlocks);
@@ -48,6 +52,16 @@ public class GameModel {
 			float yVel = dotMaxVel*r.nextFloat() - dotMaxVel/2.0F;
 			dots.add(new Dot(this,xPos,yPos,xVel,yVel));
 		}
+		
+		mousePosition = new Vector();
+		
+		il.addMouseMotionListener(new MouseMotionListener() {
+			public void mouseDragged(MouseEvent arg0) {
+			}
+			public void mouseMoved(MouseEvent e) {
+				mousePosition = new Vector(e.getX(),e.getY());
+			}
+		});
 		
 		explosions = new ArrayList<Mob>();
 		q = new QuadTree(screenDims,5);
@@ -68,6 +82,26 @@ public class GameModel {
 		
 		for (Mob m : g.removals) {
 			explosions.remove(m);
+		}
+		
+		List<Collidable> toChange = q.retrieve(new ArrayList<Collidable>(), new Collidable() {
+			public void setTempNextPosition(float percent) {
+			}
+			public Vector getTempPosition() {
+				return null;
+			}
+			public Rectangle getAABB() {
+				return new Rectangle(mousePosition.x,mousePosition.y,1,1);
+			}
+			public Vector getVelocity() {
+				return null;
+			}
+			public Dimension getDims() {
+				return null;
+			}
+		});
+		for (Collidable c : toChange) {
+			((Dot)c).setColor(Color.WHITE);
 		}
 		
 		if (r.nextFloat() < .1F)

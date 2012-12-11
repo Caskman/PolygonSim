@@ -15,17 +15,23 @@ import caskman.polygonsim.model.Vector;
 public class Dot extends Mob implements Collidable {
 	
 	public static Dimension dims = new Dimension(10,10);
+	private Color color;
 
 	public Dot(GameModel m,float xPos,float yPos,float xVel,float yVel) {
 		super(m);
 		
 		position = new Vector(xPos,yPos);
 		velocity = new Vector(xVel,yVel);
-		
+		color = Color.RED;
+	}
+	
+	public void setColor(Color color) {
+		this.color = color;
 	}
 	
 	@Override
 	public void update(GameContext g) {
+		color = Color.RED;
 		Vector newPos = Vector.add(position, velocity);
 		
 		if (newPos.x < 0 || newPos.x > model.getScreenDims().width - dims.width) {
@@ -43,7 +49,7 @@ public class Dot extends Mob implements Collidable {
 	public void draw(Graphics g, float interpol) {
 		int x = (int) (getX() + getXVel()*interpol);
 		int y = (int) (getY() + getYVel()*interpol);
-		g.setColor(Color.red);
+		g.setColor(color);
 		g.fillRect(x, y, dims.width, dims.height);
 	}
 

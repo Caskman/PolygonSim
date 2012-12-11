@@ -47,7 +47,7 @@ public class Launcher {
 			}
 			Rectangle bounds = f.getBounds();
 			Dimension screenDims = new Dimension(bounds.width,bounds.height);
-			GameModel model = new GameModel(screenDims);
+			GameModel model = new GameModel(screenDims,new InputListener(f));
 			final MainThread main = new MainThread(bs,model);
 			f.addWindowListener(new WindowListener() {
 				public void windowActivated(WindowEvent arg0) {

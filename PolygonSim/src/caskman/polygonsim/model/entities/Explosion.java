@@ -13,13 +13,13 @@ import caskman.polygonsim.model.Vector;
 
 public class Explosion extends Mob {
 	  
-	private final static int NUM_PARTICLES = 30;
+	private final static int NUM_PARTICLES = 15;
 	private final static int MAX_SPEED = 30;
 	private final static float DECAY_FACTOR = 1.08F;
-	private final static float PERCENT_ALPHA = 0.55F; // percentage of time explosion is fully visible
+//	private final static float PERCENT_ALPHA = 0.55F; // percentage of time explosion is fully visible
 	private final static int MAX_DURATION = 25;
-	private final static int ALPHA_DELTA = ((int)((0xff/MAX_DURATION)/PERCENT_ALPHA)) << 24;
-	private final static int VISIBLE_DURATION = (int) (MAX_DURATION*PERCENT_ALPHA);
+//	private final static int ALPHA_DELTA = ((int)((0xff/MAX_DURATION)/PERCENT_ALPHA)) << 24;
+//	private final static int VISIBLE_DURATION = (int) (MAX_DURATION*PERCENT_ALPHA);
 	
 	private List<Particle> particles;
 	private int duration;

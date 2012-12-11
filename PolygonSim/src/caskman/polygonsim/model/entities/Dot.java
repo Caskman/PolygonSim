@@ -15,6 +15,7 @@ public class Dot extends CollidableMob {
 	
 	public static Dimension dims = new Dimension(10,10);
 	private Color color;
+	private boolean isResolved;
 
 	public Dot(GameModel m,float xPos,float yPos,float xVel,float yVel) {
 		super(m);
@@ -22,6 +23,7 @@ public class Dot extends CollidableMob {
 		position = new Vector(xPos,yPos);
 		velocity = new Vector(xVel,yVel);
 		color = Color.RED;
+		isResolved = false;
 	}
 	
 	public void setColor(Color color) {
@@ -77,6 +79,18 @@ public class Dot extends CollidableMob {
 	protected void resolveCollision(GameContext g,Collidable c, float percent) {
 		setCollisionPosition(percent);
 		g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y));
+		setResolved(true);
+		c.setResolved(true);
+	}
+
+	@Override
+	public void setResolved(boolean b) {
+		isResolved = b;
+	}
+
+	@Override
+	public boolean isResolved() {
+		return isResolved;
 	}
 
 

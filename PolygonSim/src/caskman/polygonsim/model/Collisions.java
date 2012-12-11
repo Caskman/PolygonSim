@@ -3,6 +3,8 @@ package caskman.polygonsim.model;
 public class Collisions {
 	
 	public static float detectCollision(Collidable a,Collidable b) {
+		if (a == b)
+			return -1F;
 		float velMag1 = Vector.mag(a.getVelocity());
 		float velMag2 = Vector.mag(b.getVelocity());
 		

@@ -25,12 +25,17 @@ public abstract class CollidableMob extends Mob implements Collidable {
 	}
 	
 	private void checkCollisions(GameContext g) {
+		if (isResolved()) {
+			return;
+		}
 		List<Collidable> possibleCollisions = g.quadTree.retrieve(new ArrayList<Collidable>(),this);
 		float percent;
 		
 		for (Collidable c : possibleCollisions) {
-			if ((percent = Collisions.detectCollision(this,c)) != -1F) {
-				resolveCollision(g,c,percent);
+			if (!c.isResolved()) {
+				if ((percent = Collisions.detectCollision(this,c)) != -1F) {
+					resolveCollision(g,c,percent);
+				}
 			}
 		}
 	}

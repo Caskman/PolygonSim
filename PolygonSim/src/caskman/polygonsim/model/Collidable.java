@@ -1,7 +1,6 @@
 package caskman.polygonsim.model;
 
 
-import java.awt.Dimension;
 
 
 
@@ -17,5 +16,9 @@ public interface Collidable {
 	public Rectangle getAABB();
 	
 	public Rectangle getCollisionAABB();
+	
+	public void setResolved(boolean b);
+	
+	public boolean isResolved();
 	
 }

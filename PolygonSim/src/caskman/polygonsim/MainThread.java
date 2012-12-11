@@ -31,11 +31,9 @@ public class MainThread extends Thread {
 	}
 
 	public void run() {
-		long ticks;
 		long nextFrameTicks = System.currentTimeMillis();
 		int framesSkipped;
 		float interpol;
-		Graphics g = null;
 		
 		while (running) {
 				

@@ -50,4 +50,8 @@ public class Vector {
 	public static float mag(Vector v) {
 		return (float) Math.sqrt(v.x*v.x+v.y*v.y);
 	}
+	
+	public String toString() {
+		return "["+x+","+y+"]";
+	}
 }

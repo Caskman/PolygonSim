@@ -105,7 +105,6 @@ public class QuadTree {
 	}
 	
 	public void insert(Collidable c) {
-		Rectangle r = c.getAABB();
 		if (nodes.get(0) != null) {
 			int index = getIndex(c);
 			if (index != -1) {

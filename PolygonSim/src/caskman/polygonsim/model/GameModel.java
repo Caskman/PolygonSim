@@ -19,7 +19,7 @@ public class GameModel {
 	
 	private Dimension screenDims;
 	private Random r;
-	private float dotRatio = .0001F;
+	private float dotRatio = .00005F;
 	private float dotMaxVel = 20;
 	private List<Mob> dots;
 	private List<Mob> explosions;
@@ -74,6 +74,11 @@ public class GameModel {
 		
 		GameContext g = getGameContext();
 		
+		// reset all resolved flags
+		for (Mob m : dots) {
+			((Collidable)m).setResolved(false);
+		}
+		
 		for (Mob m : dots) {
 			m.updateMob(g);
 		}
@@ -113,13 +118,25 @@ public class GameModel {
 			public Rectangle getCollisionAABB() {
 				return null;
 			}
+
+			@Override
+			public void setResolved(boolean b) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public boolean isResolved() {
+				// TODO Auto-generated method stub
+				return false;
+			}
 		});
 		for (Collidable c : toChange) {
 			((Dot)c).setColor(Color.WHITE);
 		}
 		
-		if (r.nextFloat() < .1F)
-			explosions.add(new Explosion(this,r.nextFloat()*(float)screenDims.width,r.nextFloat()*(float)screenDims.height));
+//		if (r.nextFloat() < .1F)
+//			explosions.add(new Explosion(this,r.nextFloat()*(float)screenDims.width,r.nextFloat()*(float)screenDims.height));
 		
 	}
 	

@@ -49,7 +49,7 @@ public class QuadTree {
 	
 	public void draw(Graphics g) {
 		g.setColor(Color.BLUE);
-		g.drawRect(bounds.left(),bounds.top(),bounds.width(),bounds.height());
+		g.drawRect(bounds.left(),bounds.top(),bounds.width()-1,bounds.height()-1);
 		if (nodes.get(0) != null) {
 			for (int i = 0; i < 4; i++) {
 				nodes.get(i).draw(g);
@@ -72,10 +72,10 @@ public class QuadTree {
 		int subHeight = bounds.height()>>1;
 		int x = bounds.left();
 		int y = bounds.top();
-		nodes.set(0,new QuadTree(level + 1,new Rectangle(x+subHeight,y,subHeight,subWidth),MAX_LEVELS));
-		nodes.set(1,new QuadTree(level + 1,new Rectangle(x,y,subHeight,subWidth),MAX_LEVELS));
-		nodes.set(2,new QuadTree(level + 1,new Rectangle(x,y+subWidth,subHeight,subWidth),MAX_LEVELS));
-		nodes.set(3,new QuadTree(level + 1,new Rectangle(x+subHeight,y+subWidth,subHeight,subWidth),MAX_LEVELS));
+		nodes.set(0,new QuadTree(level + 1,new Rectangle(x+subWidth,y,subWidth,subHeight),MAX_LEVELS));
+		nodes.set(1,new QuadTree(level + 1,new Rectangle(x,y,subWidth,subHeight),MAX_LEVELS));
+		nodes.set(2,new QuadTree(level + 1,new Rectangle(x,y+subHeight,subWidth,subHeight),MAX_LEVELS));
+		nodes.set(3,new QuadTree(level + 1,new Rectangle(x+subWidth,y+subHeight,subWidth,subHeight),MAX_LEVELS));
 	}
 	
 	private int getIndex(Collidable c) {

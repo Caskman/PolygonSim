@@ -61,7 +61,7 @@ public class Dot extends Mob implements Collidable {
 
 	@Override
 	public Rectangle getAABB() {
-		return new Rectangle(position.x,position.y,position.x + dims.width,position.y + dims.height);
+		return new Rectangle(position.x,position.y,dims.width,dims.height);
 	}
 
 	@Override

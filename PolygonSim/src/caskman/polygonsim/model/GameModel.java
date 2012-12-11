@@ -15,7 +15,7 @@ public class GameModel {
 	private Dimension screenDims;
 	private Random r;
 	private float dotRatio = .0001F;
-	private float dotMaxVel = 30;
+	private float dotMaxVel = 20;
 	private List<Mob> dots;
 	private QuadTree q;
 	
@@ -42,7 +42,7 @@ public class GameModel {
 			dots.add(new Dot(this,xPos,yPos,xVel,yVel));
 		}
 		
-		q = new QuadTree(screenDims,4);
+		q = new QuadTree(screenDims,5);
 	}
 	
 	public void update() {

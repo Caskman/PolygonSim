@@ -39,11 +39,6 @@ public abstract class CollidableMob extends Mob implements Collidable {
 	
 	@Override
 	protected abstract void update(GameContext g);
-
-	@Override
-	public void drawMob(Graphics g,float interpol) {
-		draw(g,interpol);
-	}
 	
 	@Override
 	protected abstract void draw(Graphics g, float interpol);

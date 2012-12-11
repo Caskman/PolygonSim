@@ -44,9 +44,16 @@ public class GameModel {
 	}
 	
 	public void update() {
+		
+		initializeQuadTree();
+		
 		for (Mob m : blocks) {
 			m.update(null);
 		}
+	}
+	
+	private void initializeQuadTree() {
+		
 	}
 	
 	public void draw(Graphics g,float interpol) {

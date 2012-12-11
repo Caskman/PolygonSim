@@ -127,6 +127,9 @@ public class GameModel {
 		for (Mob m : dots) {
 			q.insert((Collidable)m);
 		}
+		for (Mob m : lines) {
+			q.insert((Collidable)m);
+		}
 		
 	}
 	

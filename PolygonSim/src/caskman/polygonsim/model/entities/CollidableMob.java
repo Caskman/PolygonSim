@@ -13,9 +13,11 @@ import caskman.polygonsim.model.Vector;
 public abstract class CollidableMob extends Mob implements Collidable {
 
 	protected Vector collisionPosition;
+	protected boolean isResolved;
 	
 	public CollidableMob(GameModel m) {
 		super(m);
+		isResolved = false;
 	}
 
 	@Override
@@ -55,4 +57,19 @@ public abstract class CollidableMob extends Mob implements Collidable {
 		return velocity;
 	}
 
+	@Override
+	public void setCollisionPosition(float percent) {
+		collisionPosition = Vector.add(Vector.scalar(percent, velocity),position);
+	}
+	
+	@Override
+	public void setResolved(boolean b) {
+		isResolved = b;
+	}
+
+	@Override
+	public boolean isResolved() {
+		return isResolved;
+	}
+	
 }

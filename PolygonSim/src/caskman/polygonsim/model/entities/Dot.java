@@ -15,7 +15,6 @@ public class Dot extends CollidableMob {
 	
 	public static Dimension dims = new Dimension(6,6);
 	private Color color;
-	private boolean isResolved;
 	private boolean isDead;
 
 	public Dot(GameModel m,float xPos,float yPos,float xVel,float yVel) {
@@ -24,7 +23,6 @@ public class Dot extends CollidableMob {
 		position = new Vector(xPos,yPos);
 		velocity = new Vector(xVel,yVel);
 		color = Color.RED;
-		isResolved = false;
 		isDead = false;
 	}
 	
@@ -55,14 +53,10 @@ public class Dot extends CollidableMob {
 		int x = (int) (getX() + getXVel()*interpol);
 		int y = (int) (getY() + getYVel()*interpol);
 		g.setColor(color);
-		g.fillArc(x, y, dims.width, dims.height, 0, 360);
-//		g.fillRect(x, y, dims.width, dims.height);
+//		g.fillArc(x, y, dims.width, dims.height, 0, 360);
+		g.fillRect(x, y, dims.width, dims.height);
 	}
 
-	@Override
-	public void setCollisionPosition(float percent) {
-		collisionPosition = Vector.add(Vector.scalar(percent, velocity),position);
-	}
 
 	@Override
 	public int getLargestDim() {
@@ -97,15 +91,6 @@ public class Dot extends CollidableMob {
 		}
 	}
 
-	@Override
-	public void setResolved(boolean b) {
-		isResolved = b;
-	}
-
-	@Override
-	public boolean isResolved() {
-		return isResolved;
-	}
 
 
 

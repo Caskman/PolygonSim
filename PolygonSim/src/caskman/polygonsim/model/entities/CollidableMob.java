@@ -35,9 +35,11 @@ public abstract class CollidableMob extends Mob implements Collidable {
 			if (!c.isResolved()) {
 				if ((percent = Collisions.detectCollision(this,c)) != -1F) {
 					resolveCollision(g,c,percent);
+					c.setResolved(true);
 				}
 			}
 		}
+		setResolved(true);
 	}
 	
 	protected abstract void resolveCollision(GameContext g,Collidable c,float percent);

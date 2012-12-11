@@ -79,8 +79,6 @@ public class Dot extends CollidableMob {
 	protected void resolveCollision(GameContext g,Collidable c, float percent) {
 		setCollisionPosition(percent);
 		g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y));
-		setResolved(true);
-		c.setResolved(true);
 	}
 
 	@Override

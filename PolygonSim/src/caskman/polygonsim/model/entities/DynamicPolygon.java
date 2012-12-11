@@ -7,18 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import caskman.polygonsim.MainThread;
+import caskman.polygonsim.model.Collidable;
 import caskman.polygonsim.model.GameContext;
 import caskman.polygonsim.model.GameModel;
+import caskman.polygonsim.model.Rectangle;
 import caskman.polygonsim.model.Vector;
 
-public class DynamicPolygon extends Mob {
+public class DynamicPolygon extends CollidableMob {
 	
 	static Dimension dims = new Dimension(30,30);
 	int vertices;
 	float angle;
 	static float tpi = 2*3.14159F;
-	static float angleSpeed = tpi/MainThread.FPS;
-	static int dotSide = 6;
+	float angleSpeed;
+	static int dotSide = 8;
 
 	public DynamicPolygon(GameModel m,float xPos,float yPos,float xVel,float yVel,int numVertices) {
 		super(m);
@@ -26,6 +28,7 @@ public class DynamicPolygon extends Mob {
 		velocity = new Vector(xVel,yVel);
 		vertices = numVertices;
 		angle = 0F;
+		angleSpeed = (tpi*model.getRandom().nextFloat())/(float)MainThread.FPS;
 	}
 
 	@Override
@@ -53,7 +56,7 @@ public class DynamicPolygon extends Mob {
 		float pointAngle = angle + interpol*angleSpeed;
 		int radius = dims.width>>1;
 		Vector interpolPosition = Vector.add(position,Vector.scalar(interpol, velocity));
-		Vector interpolCenterPosition = Vector.add(interpolPosition,new Vector(dims.width,dims.height));
+		Vector interpolCenterPosition = Vector.add(interpolPosition,new Vector(dims.width>>1,dims.height>>1));
 		for (int i = 0; i < vertices; i++) {
 			Vector pointOffset = new Vector((float)(radius*Math.cos(pointAngle)),(float)(radius*Math.sin(pointAngle)));
 			points.add(Vector.add(pointOffset,interpolCenterPosition));
@@ -78,8 +81,67 @@ public class DynamicPolygon extends Mob {
 			g.fillRect((int)point.x - halfDotSide, (int)point.y - halfDotSide, dotSide, dotSide);
 		}
 		
+		// draw Axis Aligned Bounding Box
+//		g.setColor(Color.BLUE);
+//		g.drawRect((int)interpolPosition.x, (int)interpolPosition.y, dims.width, dims.height);
 		
+		// draw number of vertices
+		g.setColor(Color.YELLOW);
+		g.drawString(""+vertices, interpolCenterPosition.x - 3, interpolCenterPosition.y + 2);
 		
+	}
+
+	@Override
+	public int getLargestDim() {
+		return dims.width;
+	}
+
+	@Override
+	public Rectangle getAABB() {
+		return new Rectangle(position.x,position.y,dims.width,dims.height);
+	}
+
+	@Override
+	public Rectangle getCollisionAABB() {
+		return new Rectangle(collisionPosition.x,collisionPosition.y,dims.width,dims.height);
+	}
+
+	@Override
+	protected void resolveCollision(GameContext g, Collidable c, float percent) {
+//		if (isDead) {
+//			return;
+//		}
+		if (c instanceof DynamicPolygon) {
+			DynamicPolygon d = (DynamicPolygon)c;
+//			if (d.isDead) {
+//				return;
+//			}
+			setCollisionPosition(percent);
+			
+			if (d.vertices != vertices)
+				return;
+			
+			// kill both polygons
+//			setDead(true);
+//			d.setDead(true);
+			g.removals.add(this);
+			g.removals.add(d);
+			
+			// create new polygon
+			int newVertices = vertices+1;
+			Vector newVelocity = Vector.scalar(.75F,Vector.add(velocity,d.velocity));
+			g.additions.add(new DynamicPolygon(model,collisionPosition.x,collisionPosition.y,newVelocity.x,newVelocity.y,newVertices));
+			
+			// create remainder dots
+			int numDots = vertices - 1;
+			for (int i = 0; i < numDots; i++) {
+				float xVel = model.dotMaxVel*model.getRandom().nextFloat() - (model.dotMaxVel/2F);
+				float yVel = model.dotMaxVel*model.getRandom().nextFloat() - (model.dotMaxVel/2F);
+				g.additions.add(new Dot(model,collisionPosition.x,collisionPosition.y,xVel,yVel,true));
+			}
+			
+			g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y,Color.GREEN));
+		}
 	}
 
 }

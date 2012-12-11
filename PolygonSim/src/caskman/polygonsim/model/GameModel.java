@@ -21,8 +21,8 @@ public class GameModel {
 	
 	private Dimension screenDims;
 	private Random r;
-	private float dotRatio = .00005F;
-	public float dotMaxVel = 20;
+	private float dotRatio = .0005F;
+	public float dotMaxVel = 15;
 	private List<Mob> dots;
 	private List<Mob> lines;
 	private List<Mob> explosions;
@@ -87,6 +87,9 @@ public class GameModel {
 		for (Mob m : lines) {
 			((Collidable)m).setResolved(false);
 		}
+		for (Mob m : polygons) {
+			((Collidable)m).setResolved(false);
+		}
 		
 		
 		// UPDATE ALL ENTITIES
@@ -145,6 +148,9 @@ public class GameModel {
 			q.insert((Collidable)m);
 		}
 		for (Mob m : lines) {
+			q.insert((Collidable)m);
+		}
+		for (Mob m : polygons) {
 			q.insert((Collidable)m);
 		}
 		

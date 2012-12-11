@@ -6,15 +6,16 @@ import java.awt.Dimension;
 
 
 public interface Collidable {
-//	public void resolve(Collidable a);
 	
-	public void setTempNextPosition(float percent);
 	
-	public Vector getTempPosition();
-	
-	public Rectangle getAABB();
+	public void setCollisionPosition(float percent);
 	
 	public Vector getVelocity();
 	
-	public Dimension getDims();
+	public int getLargestDim();
+	
+	public Rectangle getAABB();
+	
+	public Rectangle getCollisionAABB();
+	
 }

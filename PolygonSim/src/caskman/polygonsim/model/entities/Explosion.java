@@ -9,7 +9,6 @@ import java.util.Random;
 
 import caskman.polygonsim.model.GameContext;
 import caskman.polygonsim.model.GameModel;
-import caskman.polygonsim.model.Mob;
 import caskman.polygonsim.model.Vector;
 
 public class Explosion extends Mob {
@@ -44,14 +43,14 @@ public class Explosion extends Mob {
 	}
 
 	@Override
-	public void draw(Graphics g, float interpol) {
+	protected void draw(Graphics g, float interpol) {
 		for (Particle p : particles) {
 			p.draw(g,interpol);
 		}
 	}
 
 	@Override
-	public void update(GameContext g) {
+	protected void update(GameContext g) {
 		duration++;
 		if (duration >= MAX_DURATION) {
 			g.removals.add(this);
@@ -79,7 +78,7 @@ public class Explosion extends Mob {
 		}
 
 		@Override
-		public void draw(Graphics g, float interpol) {
+		protected void draw(Graphics g, float interpol) {
 //			int radius = dims.width>>1; // divided by 2
 //			canvas.drawCircle((position.x + velocity.x*interpol) - radius, (position.y + velocity.y * interpol) - radius, radius, paint);
 //			g.drawCircle((position.x + velocity.x*interpol), (position.y + velocity.y * interpol), dims.width>>1);
@@ -88,7 +87,7 @@ public class Explosion extends Mob {
 		}
 
 		@Override
-		public void update(GameContext g) {
+		protected void update(GameContext g) {
 			position.x += velocity.x;
 			position.y += velocity.y;
 			velocity.x = velocity.x/(DECAY_FACTOR);

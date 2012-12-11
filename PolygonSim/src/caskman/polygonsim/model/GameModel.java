@@ -12,6 +12,7 @@ import java.util.Random;
 import caskman.polygonsim.InputListener;
 import caskman.polygonsim.model.entities.Dot;
 import caskman.polygonsim.model.entities.Explosion;
+import caskman.polygonsim.model.entities.Mob;
 
 
 public class GameModel {
@@ -74,29 +75,42 @@ public class GameModel {
 		GameContext g = getGameContext();
 		
 		for (Mob m : dots) {
-			m.update(g);
+			m.updateMob(g);
 		}
 		for (Mob m : explosions) {
-			m.update(g);
+			m.updateMob(g);
 		}
 		
 		for (Mob m : g.removals) {
 			explosions.remove(m);
 		}
 		
+		for (Mob m : g.additions) {
+			if (m instanceof Explosion)
+				explosions.add(m);
+		}
+		
 		List<Collidable> toChange = q.retrieve(new ArrayList<Collidable>(), new Collidable() {
-			public void setTempNextPosition(float percent) {
-			}
-			public Vector getTempPosition() {
-				return null;
-			}
 			public Rectangle getAABB() {
 				return new Rectangle(mousePosition.x,mousePosition.y,1,1);
 			}
+
+			@Override
+			public void setCollisionPosition(float percent) {
+			}
+
+			@Override
 			public Vector getVelocity() {
 				return null;
 			}
-			public Dimension getDims() {
+
+			@Override
+			public int getLargestDim() {
+				return 0;
+			}
+
+			@Override
+			public Rectangle getCollisionAABB() {
 				return null;
 			}
 		});
@@ -111,7 +125,9 @@ public class GameModel {
 	
 	private GameContext getGameContext() {
 		GameContext g = new GameContext();
+		g.additions = new ArrayList<Mob>();
 		g.removals = new ArrayList<Mob>();
+		g.quadTree = q;
 		return g;
 	}
 	
@@ -127,10 +143,10 @@ public class GameModel {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, screenDims.width, screenDims.height);
 		for (Mob m : dots) {
-			m.draw(g,interpol);
+			m.drawMob(g,interpol);
 		}
 		for (Mob m : explosions) {
-			m.draw(g,interpol);
+			m.drawMob(g,interpol);
 		}
 		q.draw(g);
 	}

@@ -7,12 +7,11 @@ import java.awt.Graphics;
 import caskman.polygonsim.model.Collidable;
 import caskman.polygonsim.model.GameContext;
 import caskman.polygonsim.model.GameModel;
-import caskman.polygonsim.model.Mob;
 import caskman.polygonsim.model.Rectangle;
 import caskman.polygonsim.model.Vector;
 
 
-public class Dot extends Mob implements Collidable {
+public class Dot extends CollidableMob {
 	
 	public static Dimension dims = new Dimension(10,10);
 	private Color color;
@@ -30,7 +29,7 @@ public class Dot extends Mob implements Collidable {
 	}
 	
 	@Override
-	public void update(GameContext g) {
+	protected void update(GameContext g) {
 		color = Color.RED;
 		Vector newPos = Vector.add(position, velocity);
 		
@@ -46,7 +45,7 @@ public class Dot extends Mob implements Collidable {
 	}
 
 	@Override
-	public void draw(Graphics g, float interpol) {
+	protected void draw(Graphics g, float interpol) {
 		int x = (int) (getX() + getXVel()*interpol);
 		int y = (int) (getY() + getYVel()*interpol);
 		g.setColor(color);
@@ -54,15 +53,14 @@ public class Dot extends Mob implements Collidable {
 	}
 
 	@Override
-	public void setTempNextPosition(float percent) {
-		// TODO Auto-generated method stub
-		
+	public void setCollisionPosition(float percent) {
+		collisionPosition = Vector.add(Vector.scalar(percent, velocity),position);
 	}
 
+
 	@Override
-	public Vector getTempPosition() {
-		//TODO
-		return null;
+	public int getLargestDim() {
+		return dims.width;
 	}
 
 	@Override
@@ -71,15 +69,17 @@ public class Dot extends Mob implements Collidable {
 	}
 
 	@Override
-	public Vector getVelocity() {
-		// TODO Auto-generated method stub
-		return null;
+	public Rectangle getCollisionAABB() {
+		return new Rectangle(collisionPosition.x,collisionPosition.y,dims.width,dims.height);
 	}
 
 	@Override
-	public Dimension getDims() {
-		// TODO Auto-generated method stub
-		return null;
+	protected void resolveCollision(GameContext g,Collidable c, float percent) {
+		setCollisionPosition(percent);
+		g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y));
 	}
+
+
+
 
 }

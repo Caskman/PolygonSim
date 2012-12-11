@@ -21,6 +21,12 @@ public class Rectangle {
 		this.height = (int)height;
 	}
 	
+	public static boolean intersect(Rectangle a,Rectangle b) { // left is top, right is bottom
+		boolean x = (a.left() <= b.right() && a.right() >= b.left()) || (a.left() >= b.left() && a.right() <= b.right()) || (a.left() <= b.right() && a.right() >= b.right());
+		boolean y = (a.top() <= b.bottom() && a.bottom() >= b.top()) || (a.top() >= b.top() && a.bottom() <= b.bottom()) || (a.top() <= b.bottom() && a.bottom() >= b.bottom());
+		return x && y;
+	}
+	
 	public int top() {
 		return y;
 	}

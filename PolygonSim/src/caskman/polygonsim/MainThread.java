@@ -1,5 +1,6 @@
 package caskman.polygonsim;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
@@ -15,6 +16,9 @@ public class MainThread extends Thread {
 	private int MAX_FRAMESKIP = 5;
 	BufferStrategy bs;
 	GameModel model;
+	private long renderTime;
+	private long tempRenderTime;
+	private long updateTime;
  
 	public MainThread(BufferStrategy bs,GameModel model) {
 		this.setName("Game Thread");
@@ -37,11 +41,12 @@ public class MainThread extends Thread {
 				
 			
 			
-			// try locking the canvas for exclusive pixel editing on the surface
 			
 			framesSkipped = 0;
 			while ((System.currentTimeMillis() > nextFrameTicks) && (framesSkipped < MAX_FRAMESKIP)) {
-				model.update();
+				updateTime = System.currentTimeMillis();
+				update();
+				updateTime = System.currentTimeMillis() - updateTime;
 				
 				nextFrameTicks += TICKS_PER_FRAME;
 				
@@ -51,21 +56,46 @@ public class MainThread extends Thread {
 			long systemMil = System.currentTimeMillis();
 			long num = systemMil + TICKS_PER_FRAME - nextFrameTicks;
 			interpol= ((float)(num))/((float)(TICKS_PER_FRAME));
-//			interpol = ((float)(System.currentTimeMillis() + TICKS_PER_FRAME - nextFrameTicks))/((float)(TICKS_PER_FRAME));
 			
-			
-			try {
-				g = bs.getDrawGraphics();
-				model.draw(g,interpol);
-				if (!bs.contentsLost())
-					bs.show();
-//				g.dispose();
-			} finally {
-				if (g != null)
-					g.dispose();
-			}
+			tempRenderTime = System.currentTimeMillis();
+			render(interpol);
+			renderTime = System.currentTimeMillis() - tempRenderTime;
 		}
 		
 	}
+	
+	private void update() {
+		model.update();
+	}
+	
+	private void render(float interpol) {
+		Graphics g = null;
+		try {
+			g = bs.getDrawGraphics();
+			draw(g,interpol);
+			if (!bs.contentsLost())
+				bs.show();
+//			g.dispose();
+		} finally {
+			if (g != null)
+				g.dispose();
+		}
+	}
+	
+	private void draw(Graphics g,float interpol) {
+		model.draw(g,interpol);
+		drawFPSBreakdown(g,interpol);
+//		g.drawString(getFPSBreakdown(), 0, 10);
+	}
+	
+	private void drawFPSBreakdown(Graphics g,float interpol) {
+//		return "Render: "+((int)((double)renderTime/(double)TICKS_PER_FRAME*100.0))+"% Update: "+((int)((double)updateTime/(double)TICKS_PER_FRAME*100.0F))+"%";
+//		return "Render: "+(renderTime)+"ms\n Update: "+(updateTime)+"ms\n "+TICKS_PER_FRAME+"ms per frame";
+		g.setColor(Color.WHITE);
+		g.drawString("Render: "+(renderTime)+"ms", 0, 20);
+		g.drawString("Update: "+(updateTime)+"ms", 0, 40);
+		g.drawString(TICKS_PER_FRAME+"ms per frame", 0, 60);
+	}
+	
 	
 }

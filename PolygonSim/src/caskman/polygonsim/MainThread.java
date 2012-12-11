@@ -1,7 +1,7 @@
 package caskman.polygonsim;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
 import caskman.polygonsim.model.GameModel;
@@ -67,9 +67,9 @@ public class MainThread extends Thread {
 	}
 	
 	private void render(float interpol) {
-		Graphics g = null;
+		Graphics2D g = null;
 		try {
-			g = bs.getDrawGraphics();
+			g = (Graphics2D)bs.getDrawGraphics();
 			draw(g,interpol);
 			if (!bs.contentsLost())
 				bs.show();
@@ -80,13 +80,13 @@ public class MainThread extends Thread {
 		}
 	}
 	
-	private void draw(Graphics g,float interpol) {
+	private void draw(Graphics2D g,float interpol) {
 		model.draw(g,interpol);
 		drawFPSBreakdown(g,interpol);
 //		g.drawString(getFPSBreakdown(), 0, 10);
 	}
 	
-	private void drawFPSBreakdown(Graphics g,float interpol) {
+	private void drawFPSBreakdown(Graphics2D g,float interpol) {
 //		return "Render: "+((int)((double)renderTime/(double)TICKS_PER_FRAME*100.0))+"% Update: "+((int)((double)updateTime/(double)TICKS_PER_FRAME*100.0F))+"%";
 //		return "Render: "+(renderTime)+"ms\n Update: "+(updateTime)+"ms\n "+TICKS_PER_FRAME+"ms per frame";
 		g.setColor(Color.WHITE);

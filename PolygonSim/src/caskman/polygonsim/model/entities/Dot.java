@@ -2,7 +2,7 @@ package caskman.polygonsim.model.entities;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import caskman.polygonsim.model.Collidable;
 import caskman.polygonsim.model.GameContext;
@@ -47,7 +47,7 @@ public class Dot extends CollidableMob {
 	}
 
 	@Override
-	protected void draw(Graphics g, float interpol) {
+	protected void draw(Graphics2D g, float interpol) {
 		int x = (int) (getX() + getXVel()*interpol);
 		int y = (int) (getY() + getYVel()*interpol);
 		g.setColor(color);

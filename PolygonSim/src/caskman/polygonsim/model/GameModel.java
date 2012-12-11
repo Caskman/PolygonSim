@@ -2,7 +2,7 @@ package caskman.polygonsim.model;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
@@ -156,7 +156,7 @@ public class GameModel {
 		
 	}
 	
-	public void draw(Graphics g,float interpol) {
+	public void draw(Graphics2D g,float interpol) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, screenDims.width, screenDims.height);
 		for (Mob m : dots) {

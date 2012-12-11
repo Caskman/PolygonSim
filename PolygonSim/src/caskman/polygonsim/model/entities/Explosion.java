@@ -2,7 +2,7 @@ package caskman.polygonsim.model.entities;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -43,7 +43,7 @@ public class Explosion extends Mob {
 	}
 
 	@Override
-	protected void draw(Graphics g, float interpol) {
+	protected void draw(Graphics2D g, float interpol) {
 		for (Particle p : particles) {
 			p.draw(g,interpol);
 		}
@@ -78,7 +78,7 @@ public class Explosion extends Mob {
 		}
 
 		@Override
-		protected void draw(Graphics g, float interpol) {
+		protected void draw(Graphics2D g, float interpol) {
 //			int radius = dims.width>>1; // divided by 2
 //			canvas.drawCircle((position.x + velocity.x*interpol) - radius, (position.y + velocity.y * interpol) - radius, radius, paint);
 //			g.drawCircle((position.x + velocity.x*interpol), (position.y + velocity.y * interpol), dims.width>>1);

@@ -1,6 +1,6 @@
 package caskman.polygonsim.model.entities;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +48,7 @@ public abstract class CollidableMob extends Mob implements Collidable {
 	protected abstract void update(GameContext g);
 	
 	@Override
-	protected abstract void draw(Graphics g, float interpol);
+	protected abstract void draw(Graphics2D g, float interpol);
 
 	@Override
 	public Vector getVelocity() {

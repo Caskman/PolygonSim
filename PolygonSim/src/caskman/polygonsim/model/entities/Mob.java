@@ -1,6 +1,7 @@
 package caskman.polygonsim.model.entities;
 
-import java.awt.Graphics;
+
+import java.awt.Graphics2D;
 
 import caskman.polygonsim.model.GameContext;
 import caskman.polygonsim.model.GameModel;
@@ -37,12 +38,12 @@ public abstract class Mob {
 		update(g);
 	}
 	
-	public void drawMob(Graphics g,float interpol) {
+	public void drawMob(Graphics2D g,float interpol) {
 		draw(g,interpol);
 	}
 	
 	protected abstract void update(GameContext g);
 	
-	protected abstract void draw(Graphics g,float interpol);
+	protected abstract void draw(Graphics2D g,float interpol);
 	
 }

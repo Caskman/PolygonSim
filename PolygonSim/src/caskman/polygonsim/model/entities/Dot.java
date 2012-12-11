@@ -16,6 +16,7 @@ public class Dot extends CollidableMob {
 	public static Dimension dims = new Dimension(10,10);
 	private Color color;
 	private boolean isResolved;
+	private boolean isDead;
 
 	public Dot(GameModel m,float xPos,float yPos,float xVel,float yVel) {
 		super(m);
@@ -24,6 +25,7 @@ public class Dot extends CollidableMob {
 		velocity = new Vector(xVel,yVel);
 		color = Color.RED;
 		isResolved = false;
+		isDead = false;
 	}
 	
 	public void setColor(Color color) {
@@ -32,6 +34,8 @@ public class Dot extends CollidableMob {
 	
 	@Override
 	protected void update(GameContext g) {
+		if (isDead)
+			return;
 		color = Color.RED;
 		Vector newPos = Vector.add(position, velocity);
 		
@@ -59,7 +63,6 @@ public class Dot extends CollidableMob {
 		collisionPosition = Vector.add(Vector.scalar(percent, velocity),position);
 	}
 
-
 	@Override
 	public int getLargestDim() {
 		return dims.width;
@@ -75,10 +78,20 @@ public class Dot extends CollidableMob {
 		return new Rectangle(collisionPosition.x,collisionPosition.y,dims.width,dims.height);
 	}
 
+	private void setDead(boolean b) {
+		isDead = b;
+	}
+	
 	@Override
 	protected void resolveCollision(GameContext g,Collidable c, float percent) {
 		setCollisionPosition(percent);
-		g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y));
+		if (c instanceof Dot) {
+			g.removals.add(this);
+			setDead(true);
+			g.removals.add((Mob)c);
+			((Dot)c).setDead(true);
+			g.additions.add(new Line(model,position.x,position.y,model.getRandom().nextFloat(),model.getRandom().nextFloat()));
+		}
 	}
 
 	@Override

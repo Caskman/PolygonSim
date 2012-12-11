@@ -11,7 +11,7 @@ import caskman.polygonsim.model.GameModel;
 public class MainThread extends Thread {
 
 	private boolean running;
-	private int FPS = 25;
+	public static int FPS = 25;
 	private int TICKS_PER_FRAME = 1000 / FPS;
 	private int MAX_FRAMESKIP = 5;
 	BufferStrategy bs;

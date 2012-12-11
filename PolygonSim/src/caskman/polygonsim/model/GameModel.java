@@ -11,7 +11,7 @@ import java.util.Random;
 
 import caskman.polygonsim.InputListener;
 import caskman.polygonsim.model.entities.Dot;
-import caskman.polygonsim.model.entities.Explosion;
+import caskman.polygonsim.model.entities.Line;
 import caskman.polygonsim.model.entities.Mob;
 
 
@@ -22,7 +22,8 @@ public class GameModel {
 	private float dotRatio = .00005F;
 	private float dotMaxVel = 20;
 	private List<Mob> dots;
-	private List<Mob> explosions;
+	private List<Mob> lines;
+//	private List<Mob> explosions;
 	private QuadTree q;
 	private Vector mousePosition;
 	
@@ -45,6 +46,7 @@ public class GameModel {
 		r = new Random();
 		int numBlocks = (int) (screenDims.width*screenDims.height*dotRatio);
 		dots = new ArrayList<Mob>(numBlocks);
+		lines = new ArrayList<Mob>();
 		
 		for (int i = 0; i < numBlocks; i++) {
 			float xPos = r.nextFloat()*screenDims.width;
@@ -64,7 +66,7 @@ public class GameModel {
 			}
 		});
 		
-		explosions = new ArrayList<Mob>();
+//		explosions = new ArrayList<Mob>();
 		q = new QuadTree(screenDims,5);
 	}
 	
@@ -79,61 +81,31 @@ public class GameModel {
 			((Collidable)m).setResolved(false);
 		}
 		
+		// UPDATE ALL ENTITIES
 		for (Mob m : dots) {
 			m.updateMob(g);
 		}
-		for (Mob m : explosions) {
+		for (Mob m : lines) {
 			m.updateMob(g);
 		}
 		
+//		for (Mob m : explosions) {
+//			m.updateMob(g);
+//		}
+		
 		for (Mob m : g.removals) {
-			explosions.remove(m);
+			if (m instanceof Dot)
+				dots.remove(m);
+//			explosions.remove(m);
 		}
 		
 		for (Mob m : g.additions) {
-			if (m instanceof Explosion)
-				explosions.add(m);
+			if (m instanceof Line)
+				lines.add(m);
+//			if (m instanceof Explosion)
+//				explosions.add(m);
 		}
 		
-		List<Collidable> toChange = q.retrieve(new ArrayList<Collidable>(), new Collidable() {
-			public Rectangle getAABB() {
-				return new Rectangle(mousePosition.x,mousePosition.y,1,1);
-			}
-
-			@Override
-			public void setCollisionPosition(float percent) {
-			}
-
-			@Override
-			public Vector getVelocity() {
-				return null;
-			}
-
-			@Override
-			public int getLargestDim() {
-				return 0;
-			}
-
-			@Override
-			public Rectangle getCollisionAABB() {
-				return null;
-			}
-
-			@Override
-			public void setResolved(boolean b) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public boolean isResolved() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		});
-		for (Collidable c : toChange) {
-			((Dot)c).setColor(Color.WHITE);
-		}
 		
 //		if (r.nextFloat() < .1F)
 //			explosions.add(new Explosion(this,r.nextFloat()*(float)screenDims.width,r.nextFloat()*(float)screenDims.height));
@@ -162,9 +134,12 @@ public class GameModel {
 		for (Mob m : dots) {
 			m.drawMob(g,interpol);
 		}
-		for (Mob m : explosions) {
-			m.drawMob(g,interpol);
+		for (Mob m : lines) {
+			m.drawMob(g, interpol);
 		}
+//		for (Mob m : explosions) {
+//			m.drawMob(g,interpol);
+//		}
 		q.draw(g);
 	}
 }

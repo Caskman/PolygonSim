@@ -3,8 +3,6 @@ package caskman.polygonsim.model;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,7 +26,7 @@ public class GameModel {
 	private List<Mob> explosions;
 	private List<Mob> polygons;
 	private QuadTree q;
-	private Vector mousePosition;
+//	private Vector mousePosition;
 	
 	
 	public GameModel(Dimension screenDims,InputListener il) {
@@ -59,15 +57,15 @@ public class GameModel {
 			dots.add(new Dot(this,xPos,yPos,xVel,yVel,false));
 		}
 		
-		mousePosition = new Vector();
+//		mousePosition = new Vector();
 		
-		il.addMouseMotionListener(new MouseMotionListener() {
-			public void mouseDragged(MouseEvent arg0) {
-			}
-			public void mouseMoved(MouseEvent e) {
-				mousePosition = new Vector(e.getX(),e.getY());
-			}
-		});
+//		il.addMouseMotionListener(new MouseMotionListener() {
+//			public void mouseDragged(MouseEvent arg0) {
+//			}
+//			public void mouseMoved(MouseEvent e) {
+//				mousePosition = new Vector(e.getX(),e.getY());
+//			}
+//		});
 		
 		explosions = new ArrayList<Mob>();
 		polygons = new ArrayList<Mob>();

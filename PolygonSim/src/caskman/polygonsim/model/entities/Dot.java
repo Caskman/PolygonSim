@@ -102,7 +102,7 @@ public class Dot extends CollidableMob {
 			g.removals.add((Mob)c);
 			((Dot)c).setDead(true);
 			Vector newVel = Vector.add(((Mob)c).velocity,velocity);
-			g.additions.add(new Line(model,position.x,position.y,newVel.x,newVel.y));
+			g.additions.add(new DynamicPolygon(model,position.x,position.y,newVel.x,newVel.y,2));
 			g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y,Color.RED));
 		}
 	}

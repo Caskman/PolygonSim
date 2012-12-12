@@ -87,7 +87,7 @@ public class DynamicPolygon extends CollidableMob {
 		
 		// draw number of vertices
 		g.setColor(Color.YELLOW);
-		g.drawString(""+vertices, interpolCenterPosition.x - 3, interpolCenterPosition.y + 2);
+		g.drawString(""+vertices, interpolCenterPosition.x - 5, interpolCenterPosition.y + 2);
 		
 	}
 
@@ -133,7 +133,7 @@ public class DynamicPolygon extends CollidableMob {
 			g.additions.add(new DynamicPolygon(model,collisionPosition.x,collisionPosition.y,newVelocity.x,newVelocity.y,newVertices));
 			
 			// create remainder dots
-			int numDots = vertices - 1;
+			int numDots = vertices - 2;
 			for (int i = 0; i < numDots; i++) {
 				float xVel = model.dotMaxVel*model.getRandom().nextFloat() - (model.dotMaxVel/2F);
 				float yVel = model.dotMaxVel*model.getRandom().nextFloat() - (model.dotMaxVel/2F);
@@ -142,6 +142,10 @@ public class DynamicPolygon extends CollidableMob {
 			
 			g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y,Color.GREEN));
 		}
+	}
+	
+	public int getVertexCount() {
+		return vertices;
 	}
 
 }

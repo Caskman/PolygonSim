@@ -21,7 +21,7 @@ public class GameModel {
 	
 	private Dimension screenDims;
 	private Random r;
-	private float dotRatio = .0005F;
+	private float dotRatio = .0009F;
 	public float dotMaxVel = 15;
 	private List<Mob> dots;
 //	private List<Mob> lines;
@@ -29,6 +29,7 @@ public class GameModel {
 	private List<Mob> polygons;
 	private QuadTree q;
 	private Vector mousePosition;
+	private int[] censusData;
 	
 	
 	public GameModel(Dimension screenDims,InputListener il) {
@@ -72,6 +73,7 @@ public class GameModel {
 		explosions = new ArrayList<Mob>();
 		polygons = new ArrayList<Mob>();
 		q = new QuadTree(screenDims,5);
+		censusData = new int[0];
 	}
 	
 	public void update() {
@@ -128,10 +130,37 @@ public class GameModel {
 				polygons.add(m);
 		}
 		
+		updateCensus();
+		
 		
 //		if (r.nextFloat() < .1F)
 //			explosions.add(new Explosion(this,r.nextFloat()*(float)screenDims.width,r.nextFloat()*(float)screenDims.height));
 		
+	}
+	
+	private void updateCensus() {
+		censusData = new int[findLargestPolygon()];
+		
+		for (Mob m : polygons) {
+			censusData[((DynamicPolygon)m).getVertexCount() - 1]++;
+		}
+		censusData[0] = dots.size();
+		censusData[1] = lines.size();
+	}
+	
+	private int findLargestPolygon() {
+		if (polygons.size() == 0) {
+			if (lines.size() == 0)
+				return 1;
+			return 2;
+		}
+		int max = 2;
+		for (Mob m : polygons) {
+			if (((DynamicPolygon)m).getVertexCount() > max)
+				max = ((DynamicPolygon)m).getVertexCount();
+		}
+		return max;
+			
 	}
 	
 	private GameContext getGameContext() {
@@ -171,6 +200,55 @@ public class GameModel {
 		for (Mob m : explosions) {
 			m.drawMob(g,interpol);
 		}
+		
+		drawCensusData(g,interpol);
 //		q.draw(g);
+	}
+	
+	private void drawCensusData(Graphics2D g, float interpol) {
+		g.setColor(Color.WHITE);
+		
+		
+		g.drawString("Total Dots: "+calcTotalDots(), 0, 80);
+		for (int i = 0; i < censusData.length; i++) {
+			g.drawString(getPolygonName(i+1)+": "+censusData[i], 0, 100 + 20*i);
+		}
+	}
+	
+	private int calcTotalDots() {
+		int sum = 0;
+		for (Mob m : polygons) {
+			sum += ((DynamicPolygon)m).getVertexCount();
+		}
+		sum += dots.size();
+		sum += lines.size()<<1;
+		return sum;
+	}
+	
+	private String getPolygonName(int n) {
+		switch (n) {
+		case 1:
+			return "Dot";
+		case 2:
+			return "Line";
+		case 3: 
+			return "Triangle";
+		case 4:
+			return "Square";
+		case 5:
+			return "Pentagon";
+		case 6:
+			return "Hexagon";
+		case 7:
+			return "Septagon";
+		case 8:
+			return "Octagon";
+		case 9:
+			return "Nonagon";
+		case 10:
+			return "Dodecagon";
+			default:
+				return n+"-gon";
+		}
 	}
 }

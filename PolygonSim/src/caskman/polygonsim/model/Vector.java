@@ -39,6 +39,8 @@ public class Vector {
 	
 	public static Vector normalize(Vector v) {
 		float mag = Vector.mag(v);
+		if (mag == 0F)
+			return new Vector();
 		return new Vector(v.x/mag,v.y/mag);
 	}
 	
@@ -53,5 +55,13 @@ public class Vector {
 	
 	public String toString() {
 		return "["+x+","+y+"]";
+	}
+	
+	public boolean equals(Object o) {
+		if (o instanceof Vector) {
+			Vector v = (Vector)o;
+			return v.x == x && v.y == y;
+		}
+		return false;
 	}
 }

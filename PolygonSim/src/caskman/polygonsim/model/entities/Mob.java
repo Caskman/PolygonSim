@@ -46,4 +46,16 @@ public abstract class Mob {
 	
 	protected abstract void draw(Graphics2D g,float interpol);
 	
+	public Vector getVelocity() {
+		return velocity;
+	}
+	
+	public void applyAccel(Vector accel) {
+		velocity = Vector.add(velocity,accel);
+	}
+	
+	public Vector getPosition() {
+		return position;
+	}
+	
 }

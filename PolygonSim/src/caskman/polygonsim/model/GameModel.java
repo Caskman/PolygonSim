@@ -13,7 +13,7 @@ import caskman.polygonsim.InputListener;
 import caskman.polygonsim.model.entities.Dot;
 import caskman.polygonsim.model.entities.DynamicPolygon;
 import caskman.polygonsim.model.entities.Explosion;
-import caskman.polygonsim.model.entities.Line;
+//import caskman.polygonsim.model.entities.Line;
 import caskman.polygonsim.model.entities.Mob;
 
 
@@ -24,7 +24,7 @@ public class GameModel {
 	private float dotRatio = .0005F;
 	public float dotMaxVel = 15;
 	private List<Mob> dots;
-	private List<Mob> lines;
+//	private List<Mob> lines;
 	private List<Mob> explosions;
 	private List<Mob> polygons;
 	private QuadTree q;
@@ -49,7 +49,7 @@ public class GameModel {
 		r = new Random();
 		int numBlocks = (int) (screenDims.width*screenDims.height*dotRatio);
 		dots = new ArrayList<Mob>(numBlocks);
-		lines = new ArrayList<Mob>();
+//		lines = new ArrayList<Mob>();
 		
 		for (int i = 0; i < numBlocks; i++) {
 			float xPos = r.nextFloat()*screenDims.width;
@@ -84,9 +84,9 @@ public class GameModel {
 		for (Mob m : dots) {
 			((Collidable)m).setResolved(false);
 		}
-		for (Mob m : lines) {
-			((Collidable)m).setResolved(false);
-		}
+//		for (Mob m : lines) {
+//			((Collidable)m).setResolved(false);
+//		}
 		for (Mob m : polygons) {
 			((Collidable)m).setResolved(false);
 		}
@@ -96,9 +96,9 @@ public class GameModel {
 		for (Mob m : dots) {
 			m.updateMob(g);
 		}
-		for (Mob m : lines) {
-			m.updateMob(g);
-		}
+//		for (Mob m : lines) {
+//			m.updateMob(g);
+//		}
 		for (Mob m : polygons) {
 			m.updateMob(g);
 		}
@@ -111,16 +111,16 @@ public class GameModel {
 				dots.remove(m);
 			else if (m instanceof Explosion)
 				explosions.remove(m);
-			else if (m instanceof Line)
-				lines.remove(m);
+//			else if (m instanceof Line)
+//				lines.remove(m);
 			else if (m instanceof DynamicPolygon)
 				polygons.remove(m);
 		}
 		
 		for (Mob m : g.additions) {
-			if (m instanceof Line)
-				lines.add(m);
-			else if (m instanceof Explosion)
+//			if (m instanceof Line)
+//				lines.add(m);
+			if (m instanceof Explosion)
 				explosions.add(m);
 			else if (m instanceof Dot)
 				dots.add(m);
@@ -147,9 +147,9 @@ public class GameModel {
 		for (Mob m : dots) {
 			q.insert((Collidable)m);
 		}
-		for (Mob m : lines) {
-			q.insert((Collidable)m);
-		}
+//		for (Mob m : lines) {
+//			q.insert((Collidable)m);
+//		}
 		for (Mob m : polygons) {
 			q.insert((Collidable)m);
 		}
@@ -162,9 +162,9 @@ public class GameModel {
 		for (Mob m : dots) {
 			m.drawMob(g,interpol);
 		}
-		for (Mob m : lines) {
-			m.drawMob(g, interpol);
-		}
+//		for (Mob m : lines) {
+//			m.drawMob(g, interpol);
+//		}
 		for (Mob m : polygons) {
 			m.drawMob(g, interpol);
 		}

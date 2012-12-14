@@ -133,7 +133,7 @@ public class DynamicPolygon extends CollidableMob {
 			g.additions.add(new DynamicPolygon(model,collisionPosition.x,collisionPosition.y,newVelocity.x,newVelocity.y,newVertices));
 			
 			// create remainder dots
-			int numDots = vertices - 1;
+			int numDots = vertices - 2;
 			for (int i = 0; i < numDots; i++) {
 				float xVel = model.dotMaxVel*model.getRandom().nextFloat() - (model.dotMaxVel/2F);
 				float yVel = model.dotMaxVel*model.getRandom().nextFloat() - (model.dotMaxVel/2F);

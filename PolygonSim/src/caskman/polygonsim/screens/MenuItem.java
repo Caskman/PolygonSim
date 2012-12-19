@@ -78,9 +78,9 @@ public class MenuItem {
 //			Paint paint = new Paint();
 //			paint.setColor(Color.BLACK);
 			g.setColor(Color.BLACK);
-			g.fillRect((int)position.x, (int)position.y, (int)(position.x+dims.width), (int)(position.y+dims.height));
+			g.fillRect((int)position.x, (int)position.y, (int)(dims.width), (int)(dims.height));
 			g.setColor(borderColor);
-			g.drawRect((int)position.x, (int)position.y, (int)(position.x+dims.width), (int)(position.y+dims.height));
+			g.drawRect((int)position.x, (int)position.y, (int)(dims.width), (int)(dims.height));
 		}
 //		Rect rect = new Rect();
 //		textColor.getTextBounds(text, 0, text.length(), rect);
@@ -89,7 +89,7 @@ public class MenuItem {
 //		float startOffsetY = dims.height - ((dims.height - textDims.height) / 2.0F);
 		g.setColor(textColor);
 		g.setFont(new Font(Font.SERIF,Font.PLAIN,textSize));
-		g.drawString(text,position.x,position.y);
+		g.drawString(text,position.x + dims.width/32,position.y+3*dims.height/4);
 	}
 	
 	public void manageInput(InputEvent e) {

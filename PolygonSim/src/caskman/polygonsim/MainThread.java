@@ -1,10 +1,10 @@
 package caskman.polygonsim;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
-import caskman.polygonsim.model.GameModel;
 import caskman.polygonsim.screens.ScreenManager;
 
 
@@ -91,6 +91,7 @@ public class MainThread extends Thread {
 //		return "Render: "+((int)((double)renderTime/(double)TICKS_PER_FRAME*100.0))+"% Update: "+((int)((double)updateTime/(double)TICKS_PER_FRAME*100.0F))+"%";
 //		return "Render: "+(renderTime)+"ms\n Update: "+(updateTime)+"ms\n "+TICKS_PER_FRAME+"ms per frame";
 		g.setColor(Color.WHITE);
+		g.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,10));
 		g.drawString("Render: "+(renderTime)+"ms", 0, 20);
 		g.drawString("Update: "+(updateTime)+"ms", 0, 40);
 		g.drawString(TICKS_PER_FRAME+"ms per frame", 0, 60);

@@ -43,7 +43,7 @@ public class MainMenuScreen extends GameScreen {
 		menuItems.add(m);
 		
 		m = new MenuItem();
-		m.text = "Tiny Turrets";
+		m.text = "PolygonSim";
 		m.setTextColor(Color.GREEN);
 		m.isButton = false;
 		m.setTextSize(50);
@@ -65,7 +65,7 @@ public class MainMenuScreen extends GameScreen {
 	@Override
 	public void drawScreen(Graphics2D g, float interpol) {
 		g.setColor(Color.BLACK);
-		g.drawRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
+		g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
 //		Vector zero = new Vector();
 		for (MenuItem m : menuItems) {
 			m.draw(g,interpol);

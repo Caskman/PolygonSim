@@ -10,12 +10,12 @@ import java.util.Random;
 
 import javax.swing.event.MouseInputListener;
 
-import caskman.polygonsim.InputListener;
 import caskman.polygonsim.model.entities.Dot;
 import caskman.polygonsim.model.entities.DynamicPolygon;
 import caskman.polygonsim.model.entities.Explosion;
 //import caskman.polygonsim.model.entities.Line;
 import caskman.polygonsim.model.entities.Mob;
+import caskman.polygonsim.screens.InputListener;
 
 
 public class GameModel {

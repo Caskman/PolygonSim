@@ -12,7 +12,9 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
 
-import caskman.polygonsim.model.GameModel;
+import caskman.polygonsim.screens.InputListener;
+import caskman.polygonsim.screens.MainMenuScreen;
+import caskman.polygonsim.screens.ScreenManager;
 
 
 public class Launcher {
@@ -47,8 +49,10 @@ public class Launcher {
 			}
 			Rectangle bounds = f.getBounds();
 			Dimension screenDims = new Dimension(bounds.width,bounds.height);
-			GameModel model = new GameModel(screenDims,new InputListener(f));
-			final MainThread main = new MainThread(bs,model);
+//			GameModel model = new GameModel(screenDims,new InputListener(f));
+			ScreenManager manager = new ScreenManager(screenDims,new InputListener(f));
+			manager.addScreen(new MainMenuScreen(manager));
+			final MainThread main = new MainThread(bs,manager);
 			f.addWindowListener(new WindowListener() {
 				public void windowActivated(WindowEvent arg0) {
 				}

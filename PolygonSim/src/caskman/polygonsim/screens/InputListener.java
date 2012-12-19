@@ -1,4 +1,4 @@
-package caskman.polygonsim;
+package caskman.polygonsim.screens;
 
 import java.awt.Component;
 import java.awt.event.MouseListener;

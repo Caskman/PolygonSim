@@ -1,5 +1,7 @@
 package caskman.polygonsim.model;
 
+import java.awt.Point;
+
 
 
 public class Vector {
@@ -19,6 +21,11 @@ public class Vector {
 	public Vector(Vector vector) {
 		x = vector.x;
 		y = vector.y;
+	}
+	
+	public Vector(Point p) {
+		x = p.x;
+		y = p.y;
 	}
 	
 	public static Vector subtract(Vector u,Vector v) {

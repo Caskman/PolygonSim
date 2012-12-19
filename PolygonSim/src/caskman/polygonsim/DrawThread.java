@@ -52,10 +52,12 @@ public class DrawThread extends Thread {
 //			}
 			
 			RenderGroup g = context.renderGroup;
+			if (g == null)
+				continue;
 			
 			long systemMil = System.currentTimeMillis();
 			long num = systemMil - g.getCreationTime();
-			interpol= ((float)(num))/((float)(TICKS_PER_FRAME));
+			interpol = ((float)(num))/((float)(TICKS_PER_FRAME));
 			
 			tempRenderTime = System.currentTimeMillis();
 			render(interpol,g.getRenderObjectList());

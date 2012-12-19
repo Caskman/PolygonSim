@@ -142,6 +142,8 @@ public class MenuItem {
 			FontMetrics m = g.getFontMetrics();
 			dims = new Dimension(m.stringWidth(_text) + 2,m.getHeight()+2);
 			position = new Vector(_centerPosition.x - dims.width/2,_centerPosition.y - dims.height/2);
+			MenuItem.this.position = position;
+			MenuItem.this.dims = dims;
 			
 			if (_isButton) {
 				g.setColor(Color.BLACK);

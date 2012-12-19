@@ -6,7 +6,8 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import caskman.polygonsim.MainThread;
+import caskman.polygonsim.RenderObject;
+import caskman.polygonsim.UpdateThread;
 import caskman.polygonsim.model.Collidable;
 import caskman.polygonsim.model.GameContext;
 import caskman.polygonsim.model.GameModel;
@@ -28,7 +29,7 @@ public class DynamicPolygon extends CollidableMob {
 		velocity = new Vector(xVel,yVel);
 		vertices = numVertices;
 		angle = 0F;
-		angleSpeed = (tpi*model.getRandom().nextFloat())/(float)MainThread.FPS;
+		angleSpeed = (tpi*model.getRandom().nextFloat())/(float)UpdateThread.FPS;
 	}
 
 	@Override
@@ -48,48 +49,48 @@ public class DynamicPolygon extends CollidableMob {
 		position = Vector.add(position, velocity);
 	}
 
-	@Override
-	protected void draw(Graphics2D g, float interpol) {
-		List<Vector> points = new ArrayList<Vector>(vertices);
-		
-		float pointAngleInterval = tpi/vertices;
-		float pointAngle = angle + interpol*angleSpeed;
-		int radius = dims.width>>1;
-		Vector interpolPosition = Vector.add(position,Vector.scalar(interpol, velocity));
-		Vector interpolCenterPosition = Vector.add(interpolPosition,new Vector(dims.width>>1,dims.height>>1));
-		for (int i = 0; i < vertices; i++) {
-			Vector pointOffset = new Vector((float)(radius*Math.cos(pointAngle)),(float)(radius*Math.sin(pointAngle)));
-			points.add(Vector.add(pointOffset,interpolCenterPosition));
-			
-			pointAngle += pointAngleInterval;
-		}
-		
-		// draw connecting lines
-		
-		g.setColor(Color.GREEN);
-		for (int i = 0; i < vertices; i++) {
-			Vector p1 = points.get(i);
-			Vector p2 = points.get((i+1)%vertices);
-			g.drawLine((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
-		}
-		
-		
-		//draw points
-		int halfDotSide = dotSide>>1;
-		g.setColor(Color.RED);
-		for (Vector point : points) {
-			g.fillRect((int)point.x - halfDotSide, (int)point.y - halfDotSide, dotSide, dotSide);
-		}
-		
-		// draw Axis Aligned Bounding Box
-//		g.setColor(Color.BLUE);
-//		g.drawRect((int)interpolPosition.x, (int)interpolPosition.y, dims.width, dims.height);
-		
-		// draw number of vertices
-		g.setColor(Color.YELLOW);
-		g.drawString(""+vertices, interpolCenterPosition.x - 3, interpolCenterPosition.y + 2);
-		
-	}
+//	@Override
+//	protected void draw(Graphics2D g, float interpol) {
+//		List<Vector> points = new ArrayList<Vector>(vertices);
+//		
+//		float pointAngleInterval = tpi/vertices;
+//		float pointAngle = angle + interpol*angleSpeed;
+//		int radius = dims.width>>1;
+//		Vector interpolPosition = Vector.add(position,Vector.scalar(interpol, velocity));
+//		Vector interpolCenterPosition = Vector.add(interpolPosition,new Vector(dims.width>>1,dims.height>>1));
+//		for (int i = 0; i < vertices; i++) {
+//			Vector pointOffset = new Vector((float)(radius*Math.cos(pointAngle)),(float)(radius*Math.sin(pointAngle)));
+//			points.add(Vector.add(pointOffset,interpolCenterPosition));
+//			
+//			pointAngle += pointAngleInterval;
+//		}
+//		
+//		// draw connecting lines
+//		
+//		g.setColor(Color.GREEN);
+//		for (int i = 0; i < vertices; i++) {
+//			Vector p1 = points.get(i);
+//			Vector p2 = points.get((i+1)%vertices);
+//			g.drawLine((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
+//		}
+//		
+//		
+//		//draw points
+//		int halfDotSide = dotSide>>1;
+//		g.setColor(Color.RED);
+//		for (Vector point : points) {
+//			g.fillRect((int)point.x - halfDotSide, (int)point.y - halfDotSide, dotSide, dotSide);
+//		}
+//		
+//		// draw Axis Aligned Bounding Box
+////		g.setColor(Color.BLUE);
+////		g.drawRect((int)interpolPosition.x, (int)interpolPosition.y, dims.width, dims.height);
+//		
+//		// draw number of vertices
+//		g.setColor(Color.YELLOW);
+//		g.drawString(""+vertices, interpolCenterPosition.x - 3, interpolCenterPosition.y + 2);
+//		
+//	}
 
 	@Override
 	public int getLargestDim() {
@@ -144,4 +145,74 @@ public class DynamicPolygon extends CollidableMob {
 		}
 	}
 
+
+	@Override
+	public void getRenderObjects(List<RenderObject> renderList) {
+		renderList.add(new DynamicPolygonObject(vertices,angle,angleSpeed,position,velocity));
+	}
+
+	private class DynamicPolygonObject extends RenderObject {
+
+		private int vertices;
+		private float angle;
+		private float angleSpeed;
+		private Vector position;
+		private Vector velocity;
+		
+		
+		public DynamicPolygonObject(int vertices2, float angle2,
+				float angleSpeed2, Vector position2, Vector velocity2) {
+			vertices = vertices2;
+			angle = angle2;
+			angleSpeed = angleSpeed2;
+			position = position2;
+			velocity = velocity2;
+		}
+
+
+		@Override
+		public void render(Graphics2D g, float interpol) {
+			List<Vector> points = new ArrayList<Vector>(vertices);
+			
+			float pointAngleInterval = tpi/vertices;
+			float pointAngle = angle + interpol*angleSpeed;
+			int radius = dims.width>>1;
+			Vector interpolPosition = Vector.add(position,Vector.scalar(interpol, velocity));
+			Vector interpolCenterPosition = Vector.add(interpolPosition,new Vector(dims.width>>1,dims.height>>1));
+			for (int i = 0; i < vertices; i++) {
+				Vector pointOffset = new Vector((float)(radius*Math.cos(pointAngle)),(float)(radius*Math.sin(pointAngle)));
+				points.add(Vector.add(pointOffset,interpolCenterPosition));
+				
+				pointAngle += pointAngleInterval;
+			}
+			
+			// draw connecting lines
+			
+			g.setColor(Color.GREEN);
+			for (int i = 0; i < vertices; i++) {
+				Vector p1 = points.get(i);
+				Vector p2 = points.get((i+1)%vertices);
+				g.drawLine((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
+			}
+			
+			
+			//draw points
+			int halfDotSide = dotSide>>1;
+			g.setColor(Color.RED);
+			for (Vector point : points) {
+				g.fillRect((int)point.x - halfDotSide, (int)point.y - halfDotSide, dotSide, dotSide);
+			}
+			
+			// draw Axis Aligned Bounding Box
+//			g.setColor(Color.BLUE);
+//			g.drawRect((int)interpolPosition.x, (int)interpolPosition.y, dims.width, dims.height);
+			
+			// draw number of vertices
+			g.setColor(Color.YELLOW);
+			g.drawString(""+vertices, interpolCenterPosition.x - 3, interpolCenterPosition.y + 2);
+			
+		}
+		
+	}
+	
 }

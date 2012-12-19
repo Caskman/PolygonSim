@@ -4,27 +4,26 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
-
-import caskman.polygonsim.screens.ScreenManager;
-
+import java.util.List;
 
 
-public class MainThread extends Thread {
+
+public class DrawThread extends Thread {
 
 	private boolean running;
-	public static int FPS = 25;
+	private int FPS = ThreadContext.FPS;
 	private int TICKS_PER_FRAME = 1000 / FPS;
 	private int MAX_FRAMESKIP = 5;
 	BufferStrategy bs;
-	ScreenManager manager;
 	private long renderTime;
 	private long tempRenderTime;
-	private long updateTime;
+//	private long updateTime;
+	private ThreadContext context;
  
-	public MainThread(BufferStrategy bs,ScreenManager manager) {
-		this.setName("Game Thread");
+	public DrawThread(ThreadContext c,BufferStrategy bs) {
+		this.setName("Draw Thread");
 		this.bs = bs;
-		this.manager = manager;
+		context = c;
 	}
 
 	public void setRunning(boolean running) {
@@ -41,37 +40,36 @@ public class MainThread extends Thread {
 			
 			
 			
-			framesSkipped = 0;
-			while ((System.currentTimeMillis() > nextFrameTicks) && (framesSkipped < MAX_FRAMESKIP)) {
-				updateTime = System.currentTimeMillis();
-				update();
-				updateTime = System.currentTimeMillis() - updateTime;
-				
-				nextFrameTicks += TICKS_PER_FRAME;
-				
-				framesSkipped++;
-			}
+//			framesSkipped = 0;
+//			while ((System.currentTimeMillis() > nextFrameTicks) && (framesSkipped < MAX_FRAMESKIP)) {
+////				updateTime = System.currentTimeMillis();
+////				update();
+////				updateTime = System.currentTimeMillis() - updateTime;
+//				
+//				nextFrameTicks += TICKS_PER_FRAME;
+//				
+//				framesSkipped++;
+//			}
+			
+			RenderGroup g = context.renderGroup;
 			
 			long systemMil = System.currentTimeMillis();
-			long num = systemMil + TICKS_PER_FRAME - nextFrameTicks;
+			long num = systemMil - g.getCreationTime();
 			interpol= ((float)(num))/((float)(TICKS_PER_FRAME));
 			
 			tempRenderTime = System.currentTimeMillis();
-			render(interpol);
+			render(interpol,g.getRenderObjectList());
 			renderTime = System.currentTimeMillis() - tempRenderTime;
 		}
 		
 	}
 	
-	private void update() {
-		manager.updateScreens();
-	}
 	
-	private void render(float interpol) {
+	private void render(float interpol,List<RenderObject> renderList) {
 		Graphics2D g = null;
 		try {
 			g = (Graphics2D)bs.getDrawGraphics();
-			draw(g,interpol);
+			draw(g,interpol,renderList);
 			if (!bs.contentsLost())
 				bs.show();
 //			g.dispose();
@@ -81,8 +79,11 @@ public class MainThread extends Thread {
 		}
 	}
 	
-	private void draw(Graphics2D g,float interpol) {
-		manager.drawScreens(g,interpol);
+	private void draw(Graphics2D g,float interpol,List<RenderObject> renderList) {
+		for (RenderObject r : renderList) {
+			r.render(g,interpol);
+		}
+//		manager.drawScreens(g,interpol);
 		drawFPSBreakdown(g,interpol);
 //		g.drawString(getFPSBreakdown(), 0, 10);
 	}
@@ -92,9 +93,9 @@ public class MainThread extends Thread {
 //		return "Render: "+(renderTime)+"ms\n Update: "+(updateTime)+"ms\n "+TICKS_PER_FRAME+"ms per frame";
 		g.setColor(Color.WHITE);
 		g.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,10));
-		g.drawString("Render: "+(renderTime)+"ms", 0, 20);
-		g.drawString("Update: "+(updateTime)+"ms", 0, 40);
-		g.drawString(TICKS_PER_FRAME+"ms per frame", 0, 60);
+		g.drawString("Render: "+(renderTime)+"ms", 0, 40);
+//		g.drawString("Update: "+(updateTime)+"ms", 0, 40);
+//		g.drawString(TICKS_PER_FRAME+"ms per frame", 0, 60);
 	}
 	
 	

@@ -52,14 +52,17 @@ public class Launcher {
 //			GameModel model = new GameModel(screenDims,new InputListener(f));
 			ScreenManager manager = new ScreenManager(screenDims,new InputListener(f));
 			manager.addScreen(new MainMenuScreen(manager));
-			final MainThread main = new MainThread(bs,manager);
+			ThreadContext c = new ThreadContext();
+			final UpdateThread updateThread = new UpdateThread(c,manager);
+			final DrawThread drawThread = new DrawThread(c,bs);
 			f.addWindowListener(new WindowListener() {
 				public void windowActivated(WindowEvent arg0) {
 				}
 				public void windowClosed(WindowEvent arg0) {
 				}
 				public void windowClosing(WindowEvent arg0) {
-					main.setRunning(false);
+					updateThread.setRunning(false);
+					drawThread.setRunning(false);
 					System.exit(0);
 				}
 				public void windowDeactivated(WindowEvent arg0) {
@@ -71,8 +74,10 @@ public class Launcher {
 				public void windowOpened(WindowEvent arg0) {
 				}
 			});
-			main.setRunning(true);
-			main.start();
+			updateThread.setRunning(true);
+			drawThread.setRunning(true);
+			updateThread.start();
+			drawThread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 			gd.setFullScreenWindow(null);

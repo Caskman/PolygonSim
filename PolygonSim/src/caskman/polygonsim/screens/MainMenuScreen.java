@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.w3c.dom.css.Rect;
 
+import caskman.polygonsim.RenderObject;
 import caskman.polygonsim.model.Vector;
 
 
@@ -62,20 +63,34 @@ public class MainMenuScreen extends GameScreen {
 		
 	}
 
-	@Override
-	public void drawScreen(Graphics2D g, float interpol) {
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
-//		Vector zero = new Vector();
-		for (MenuItem m : menuItems) {
-			m.draw(g,interpol);
-		}
-	}
+//	@Override
+//	public void drawScreen(Graphics2D g, float interpol) {
+//		g.setColor(Color.BLACK);
+//		g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
+////		Vector zero = new Vector();
+//		for (MenuItem m : menuItems) {
+//			m.draw(g,interpol);
+//		}
+//	}
 
 	@Override
 	public void manageInput(InputEvent e) {
 		for (MenuItem m : menuItems) {
 			m.manageInput(e);
+		}
+	}
+
+	@Override
+	public void getRenderObjects(List<RenderObject> renderList) {
+		renderList.add(new RenderObject() {
+			@Override
+			public void render(Graphics2D g, float interpol) {
+				g.setColor(Color.BLACK);
+				g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
+			}
+		});
+		for (MenuItem m : menuItems) {
+			m.getRenderObjects(renderList);
 		}
 	}
 

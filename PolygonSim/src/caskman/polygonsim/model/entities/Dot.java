@@ -3,8 +3,10 @@ package caskman.polygonsim.model.entities;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.util.List;
 
-import caskman.polygonsim.MainThread;
+import caskman.polygonsim.RenderObject;
+import caskman.polygonsim.UpdateThread;
 import caskman.polygonsim.model.Collidable;
 import caskman.polygonsim.model.GameContext;
 import caskman.polygonsim.model.GameModel;
@@ -17,7 +19,7 @@ public class Dot extends CollidableMob {
 	public static Dimension dims = new Dimension(6,6);
 	private Color color;
 	private boolean isDead;
-	static int MAX_GHOST_DURATION = (int) (MainThread.FPS*.5F);
+	static int MAX_GHOST_DURATION = (int) (UpdateThread.FPS*.5F);
 	boolean isGhost;
 	int ghostDuration;
 
@@ -57,17 +59,17 @@ public class Dot extends CollidableMob {
 		ghostDuration++;
 	}
 
-	@Override
-	protected void draw(Graphics2D g, float interpol) {
-		int x = (int) (getX() + getXVel()*interpol);
-		int y = (int) (getY() + getYVel()*interpol);
-		if (isGhost)
-			g.setColor(Color.WHITE);
-		else 
-			g.setColor(color);
-//		g.fillArc(x, y, dims.width, dims.height, 0, 360);
-		g.fillRect(x, y, dims.width, dims.height);
-	}
+//	@Override
+//	protected void draw(Graphics2D g, float interpol) {
+//		int x = (int) (getX() + getXVel()*interpol);
+//		int y = (int) (getY() + getYVel()*interpol);
+//		if (isGhost)
+//			g.setColor(Color.WHITE);
+//		else 
+//			g.setColor(color);
+////		g.fillArc(x, y, dims.width, dims.height, 0, 360);
+//		g.fillRect(x, y, dims.width, dims.height);
+//	}
 
 
 	@Override
@@ -107,8 +109,39 @@ public class Dot extends CollidableMob {
 		}
 	}
 
+	@Override
+	public void getRenderObjects(List<RenderObject> renderList) {
+		renderList.add(new DotObject(isGhost,color,position,velocity));
+	}
 
 
+	private class DotObject extends RenderObject {
+
+		private boolean isGhost;
+		private Color color;
+		private Vector position;
+		private Vector velocity;
+		
+		public DotObject(boolean isGhost2, Color color2, Vector position2,
+				Vector velocity2) {
+			isGhost = isGhost2;
+			color = color2;
+			position = position2;
+			velocity = velocity2;
+		}
+
+		@Override
+		public void render(Graphics2D g, float interpol) {
+			int x = (int) (position.x + velocity.x*interpol);
+			int y = (int) (position.y + velocity.y*interpol);
+			if (isGhost)
+				g.setColor(Color.WHITE);
+			else 
+				g.setColor(color);
+			g.fillRect(x, y, dims.width, dims.height);
+		}
+		
+	}
 
 
 }

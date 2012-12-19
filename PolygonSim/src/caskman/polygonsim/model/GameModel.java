@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import caskman.polygonsim.RenderObject;
 import caskman.polygonsim.model.entities.Dot;
 import caskman.polygonsim.model.entities.DynamicPolygon;
 import caskman.polygonsim.model.entities.Explosion;
 import caskman.polygonsim.model.entities.Mob;
 import caskman.polygonsim.screens.InputEvent;
-import caskman.polygonsim.screens.InputListener;
 //import caskman.polygonsim.model.entities.Line;
 
 
@@ -253,23 +253,43 @@ public class GameModel {
 		
 	}
 	
-	public void draw(Graphics2D g,float interpol) {
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, screenDims.width, screenDims.height);
-		for (Mob m : dots) {
-			m.drawMob(g,interpol);
-		}
-//		for (Mob m : lines) {
+//	public void draw(Graphics2D g,float interpol) {
+//		g.setColor(Color.BLACK);
+//		g.fillRect(0, 0, screenDims.width, screenDims.height);
+//		for (Mob m : dots) {
+//			m.drawMob(g,interpol);
+//		}
+////		for (Mob m : lines) {
+////			m.drawMob(g, interpol);
+////		}
+//		for (Mob m : polygons) {
 //			m.drawMob(g, interpol);
 //		}
+//		for (Mob m : explosions) {
+//			m.drawMob(g,interpol);
+//		}
+//		drawMouseInput(g,interpol);
+////		q.draw(g);
+//	}
+	
+	public void getRenderObjects(List<RenderObject> renderList) {
+		renderList.add(new RenderObject() {
+			@Override
+			public void render(Graphics2D g, float interpol) {
+				g.setColor(Color.BLACK);
+				g.fillRect(0, 0, screenDims.width, screenDims.height);
+			}
+		});
+		for (Mob m : dots) {
+			m.getRenderObjects(renderList);
+		}
 		for (Mob m : polygons) {
-			m.drawMob(g, interpol);
+			m.getRenderObjects(renderList);
 		}
 		for (Mob m : explosions) {
-			m.drawMob(g,interpol);
+			m.getRenderObjects(renderList);
 		}
-		drawMouseInput(g,interpol);
-//		q.draw(g);
+		
 	}
 	
 	private void drawMouseInput(Graphics2D g,float interpol) {
@@ -279,42 +299,5 @@ public class GameModel {
 		g.drawString(mousePosition.toString(),0,100);
 	}
 
-//	private void initializeInputListeners(InputListener il) {
-//		
-//		MouseInputListener ml = new MouseInputListener() {
-//		@Override
-//		public void mouseClicked(MouseEvent arg0) {
-//			
-//		}
-//		@Override
-//		public void mouseEntered(MouseEvent arg0) {
-//			
-//		}
-//		@Override
-//		public void mouseExited(MouseEvent arg0) {
-//			
-//		}
-//		@Override
-//		public void mousePressed(MouseEvent e) {
-//			isMousePressed = true;
-//			mousePosition = new Vector(e.getX(),e.getY());
-//		}
-//		@Override
-//		public void mouseReleased(MouseEvent arg0) {
-//			isMousePressed = false;
-//		}
-//		@Override
-//		public void mouseDragged(MouseEvent e) {
-//			isMousePressed = true;
-//			mousePosition = new Vector(e.getX(),e.getY());
-//		}
-//		@Override
-//		public void mouseMoved(MouseEvent arg0) {
-//			
-//		}
-//	};
-//		il.addMouseListener(ml);
-//		il.addMouseMotionListener(ml);
-//	}
 
 }

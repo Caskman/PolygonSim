@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import caskman.polygonsim.RenderObject;
 import caskman.polygonsim.model.GameContext;
 import caskman.polygonsim.model.GameModel;
 import caskman.polygonsim.model.Vector;
@@ -42,12 +43,12 @@ public class Explosion extends Mob {
 		duration = 0;
 	}
 
-	@Override
-	protected void draw(Graphics2D g, float interpol) {
-		for (Particle p : particles) {
-			p.draw(g,interpol);
-		}
-	}
+//	@Override
+//	protected void draw(Graphics2D g, float interpol) {
+//		for (Particle p : particles) {
+//			p.draw(g,interpol);
+//		}
+//	}
 
 	@Override
 	protected void update(GameContext g) {
@@ -59,6 +60,13 @@ public class Explosion extends Mob {
 		
 		for (Particle p : particles) {
 			p.update(g);
+		}
+	}
+	
+	@Override
+	public void getRenderObjects(List<RenderObject> renderList) {
+		for (Particle p : particles) {
+			p.getRenderObjects(renderList);
 		}
 	}
 	
@@ -77,14 +85,14 @@ public class Explosion extends Mob {
 			
 		}
 
-		@Override
-		protected void draw(Graphics2D g, float interpol) {
-//			int radius = dims.width>>1; // divided by 2
-//			canvas.drawCircle((position.x + velocity.x*interpol) - radius, (position.y + velocity.y * interpol) - radius, radius, paint);
-//			g.drawCircle((position.x + velocity.x*interpol), (position.y + velocity.y * interpol), dims.width>>1);
-			g.setColor(color);
-			g.fillArc((int)(position.x + velocity.x*interpol), (int)(position.y + velocity.y*interpol), dims.width, dims.height, 0, 360);
-		}
+//		@Override
+//		protected void draw(Graphics2D g, float interpol) {
+////			int radius = dims.width>>1; // divided by 2
+////			canvas.drawCircle((position.x + velocity.x*interpol) - radius, (position.y + velocity.y * interpol) - radius, radius, paint);
+////			g.drawCircle((position.x + velocity.x*interpol), (position.y + velocity.y * interpol), dims.width>>1);
+//			g.setColor(color);
+//			g.fillArc((int)(position.x + velocity.x*interpol), (int)(position.y + velocity.y*interpol), dims.width, dims.height, 0, 360);
+//		}
 
 		@Override
 		protected void update(GameContext g) {
@@ -97,8 +105,39 @@ public class Explosion extends Mob {
 //			if (duration > VISIBLE_DURATION) 
 //				paint.setColor(paint.getColor()-((int)ALPHA_DELTA));
 		}
+
+		@Override
+		public void getRenderObjects(List<RenderObject> renderList) {
+			renderList.add(new ParticleObject(color,position,velocity,dims));
+		}
+		
+		private class ParticleObject extends RenderObject {
+
+			private Color color;
+			private Vector position;
+			private Vector velocity;
+			private Dimension dims;
+			
+			
+			public ParticleObject(Color color2, Vector position2,
+					Vector velocity2, Dimension dims2) {
+				color = color2;
+				position = position2;
+				velocity = velocity2;
+				dims = dims2;
+			}
+
+
+			@Override
+			public void render(Graphics2D g, float interpol) {
+				g.setColor(color);
+				g.fillArc((int)(position.x + velocity.x*interpol), (int)(position.y + velocity.y*interpol), dims.width, dims.height, 0, 360);
+			}
+			
+		}
 		
 	}
+
 	
 
 }

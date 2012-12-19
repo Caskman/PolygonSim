@@ -2,6 +2,9 @@ package caskman.polygonsim.screens;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.List;
+
+import caskman.polygonsim.RenderObject;
 
 
 public class LoadingScreen extends GameScreen {
@@ -36,20 +39,35 @@ public class LoadingScreen extends GameScreen {
 		}
 	}
 
-	@Override
-	public void drawScreen(Graphics2D g, float interpol) {
-		if (isSlowLoad) {
-			//TODO
-		} else {
-//			canvas.drawColor(Color.BLACK);
-			g.setColor(Color.BLACK);
-			g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
-		}
-	}
+//	@Override
+//	public void drawScreen(Graphics2D g, float interpol) {
+//		if (isSlowLoad) {
+//			//TODO
+//		} else {
+////			canvas.drawColor(Color.BLACK);
+//			g.setColor(Color.BLACK);
+//			g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
+//		}
+//	}
 
 	@Override
 	public void manageInput(InputEvent e) {
 		
+	}
+
+	@Override
+	public void getRenderObjects(List<RenderObject> renderList) {
+		renderList.add(new RenderObject() {
+			@Override
+			public void render(Graphics2D g, float interpol) {
+				if (isSlowLoad) {
+					//TODO
+				} else {
+					g.setColor(Color.BLACK);
+					g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
+				}
+			}
+		});
 	}
 
 

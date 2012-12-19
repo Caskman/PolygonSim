@@ -1,6 +1,9 @@
 package caskman.polygonsim.screens;
 
 import java.awt.Graphics2D;
+import java.util.List;
+
+import caskman.polygonsim.RenderObject;
 
 
 
@@ -22,7 +25,9 @@ public abstract class GameScreen {
 	
 	public abstract void updateScreen();
 	
-	public abstract void drawScreen(Graphics2D g,float interpol);
+//	public abstract void drawScreen(Graphics2D g,float interpol);
 	
 	public abstract void manageInput(InputEvent e);
+	
+	public abstract void getRenderObjects(List<RenderObject> renderList);
 }

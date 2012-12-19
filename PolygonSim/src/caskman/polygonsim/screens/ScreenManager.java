@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import caskman.polygonsim.RenderObject;
 import caskman.polygonsim.model.Vector;
 
 
@@ -64,12 +65,12 @@ public class ScreenManager {
 		}
 	}
 	
-	public void drawScreens(Graphics2D g, float interpol) {
-		for (GameScreen s : screens) {
-			if (s.state != ScreenState.HIDDEN)
-				s.drawScreen(g,interpol);
-		}
-	}
+//	public void drawScreens(Graphics2D g, float interpol) {
+//		for (GameScreen s : screens) {
+//			if (s.state != ScreenState.HIDDEN)
+//				s.drawScreen(g,interpol);
+//		}
+//	}
 	
 	public void manageInput(InputEvent e) {
 		inputQueue.offer(e);
@@ -98,6 +99,12 @@ public class ScreenManager {
 			screens.set(i, null);
 		}
 		screens = new ArrayList<GameScreen>();
+	}
+	
+	public void getRenderObjects(List<RenderObject> renderList) {
+		for (GameScreen g : screens) {
+			g.getRenderObjects(renderList);
+		}
 	}
 	
 	class MyMouseAdapter extends MouseAdapter {

@@ -36,7 +36,7 @@ public class MainMenuScreen extends GameScreen {
 		m.centerPosition = new Vector(manager.getScreenDims().width/2,2*(manager.getScreenDims().height)/3);
 		m.addMenuItemListener(new MenuItemListener() {
 			public void itemActivated() {
-				GameScreen[] screens = {new MainGameScreen(manager)};
+				GameScreen[] screens = {new MainGameScreen(manager,true)};
 				LoadingScreen.load(manager,screens,false);
 			}
 		});
@@ -58,12 +58,12 @@ public class MainMenuScreen extends GameScreen {
 	
 	
 	@Override
-	public void update() {
+	public void updateScreen() {
 		
 	}
 
 	@Override
-	public void draw(Graphics2D g, float interpol) {
+	public void drawScreen(Graphics2D g, float interpol) {
 		g.setColor(Color.BLACK);
 		g.drawRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
 //		Vector zero = new Vector();

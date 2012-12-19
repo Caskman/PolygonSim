@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 
 import caskman.polygonsim.model.GameModel;
+import caskman.polygonsim.screens.ScreenManager;
 
 
 
@@ -15,15 +16,15 @@ public class MainThread extends Thread {
 	private int TICKS_PER_FRAME = 1000 / FPS;
 	private int MAX_FRAMESKIP = 5;
 	BufferStrategy bs;
-	GameModel model;
+	ScreenManager manager;
 	private long renderTime;
 	private long tempRenderTime;
 	private long updateTime;
  
-	public MainThread(BufferStrategy bs,GameModel model) {
+	public MainThread(BufferStrategy bs,ScreenManager manager) {
 		this.setName("Game Thread");
 		this.bs = bs;
-		this.model = model;
+		this.manager = manager;
 	}
 
 	public void setRunning(boolean running) {
@@ -63,7 +64,7 @@ public class MainThread extends Thread {
 	}
 	
 	private void update() {
-		model.update();
+		manager.updateScreens();
 	}
 	
 	private void render(float interpol) {
@@ -81,7 +82,7 @@ public class MainThread extends Thread {
 	}
 	
 	private void draw(Graphics2D g,float interpol) {
-		model.draw(g,interpol);
+		manager.drawScreens(g,interpol);
 		drawFPSBreakdown(g,interpol);
 //		g.drawString(getFPSBreakdown(), 0, 10);
 	}

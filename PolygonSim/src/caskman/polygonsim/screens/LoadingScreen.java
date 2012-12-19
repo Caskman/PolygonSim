@@ -25,7 +25,7 @@ public class LoadingScreen extends GameScreen {
 	}
 
 	@Override
-	public void update() {
+	public void updateScreen() {
 		if (isSlowLoad) {
 			//TODO
 		} else {
@@ -37,7 +37,7 @@ public class LoadingScreen extends GameScreen {
 	}
 
 	@Override
-	public void draw(Graphics2D g, float interpol) {
+	public void drawScreen(Graphics2D g, float interpol) {
 		if (isSlowLoad) {
 			//TODO
 		} else {

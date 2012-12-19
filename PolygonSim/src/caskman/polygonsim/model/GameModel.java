@@ -3,19 +3,17 @@ package caskman.polygonsim.model;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.swing.event.MouseInputListener;
-
 import caskman.polygonsim.model.entities.Dot;
 import caskman.polygonsim.model.entities.DynamicPolygon;
 import caskman.polygonsim.model.entities.Explosion;
-//import caskman.polygonsim.model.entities.Line;
 import caskman.polygonsim.model.entities.Mob;
+import caskman.polygonsim.screens.InputEvent;
 import caskman.polygonsim.screens.InputListener;
+//import caskman.polygonsim.model.entities.Line;
 
 
 public class GameModel {
@@ -38,10 +36,10 @@ public class GameModel {
 	private Vector mousePosition;
 	
 	
-	public GameModel(Dimension screenDims,InputListener il) {
+	public GameModel(Dimension screenDims) {
 		this.screenDims = screenDims;
 		
-		initialize(il);
+		initialize();
 	}
 	
 	public Dimension getScreenDims() {
@@ -52,7 +50,7 @@ public class GameModel {
 		return r;
 	}
 	
-	private void initialize(InputListener il) {
+	private void initialize() {
 		r = new Random();
 		isMousePressed = false;
 		int numBlocks = (int) (screenDims.width*screenDims.height*dotRatio);
@@ -71,7 +69,7 @@ public class GameModel {
 		
 		mousePosition = new Vector();
 		
-		initializeInputListeners(il);
+//		initializeInputListeners(il);
 		
 		explosions = new ArrayList<Mob>();
 		polygons = new ArrayList<Mob>();
@@ -79,45 +77,16 @@ public class GameModel {
 		q = new QuadTree(screenDims,5);
 	}
 	
-	private void initializeInputListeners(InputListener il) {
-	
-		MouseInputListener ml = new MouseInputListener() {
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			
-		}
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			
-		}
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			
-		}
-		@Override
-		public void mousePressed(MouseEvent e) {
+	public void manageInput(InputEvent e) {
+		if (e.getType() == InputEvent.MOUSE_PRESSED || e.getType() == InputEvent.MOUSE_DRAGGED) {
 			isMousePressed = true;
-			mousePosition = new Vector(e.getX(),e.getY());
-		}
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
+			mousePosition = e.getVector();
+		} else if (e.getType() == InputEvent.MOUSE_RELEASED) {
 			isMousePressed = false;
 		}
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			isMousePressed = true;
-			mousePosition = new Vector(e.getX(),e.getY());
-		}
-		@Override
-		public void mouseMoved(MouseEvent arg0) {
-			
-		}
-	};
-		il.addMouseListener(ml);
-		il.addMouseMotionListener(ml);
 	}
 	
-	private void manageInput() {
+	private void processInput() {
 		if (isMousePressed) {
 			
 			applySuctionField(mousePosition);
@@ -174,7 +143,7 @@ public class GameModel {
 	
 	public void update() {
 		
-		manageInput();
+		processInput();
 		
 		updateQuadTree();
 		
@@ -309,5 +278,43 @@ public class GameModel {
 		g.drawString("Mouse is "+((isMousePressed)?"pressed":"not pressed"), 0, 80);
 		g.drawString(mousePosition.toString(),0,100);
 	}
-	
+
+//	private void initializeInputListeners(InputListener il) {
+//		
+//		MouseInputListener ml = new MouseInputListener() {
+//		@Override
+//		public void mouseClicked(MouseEvent arg0) {
+//			
+//		}
+//		@Override
+//		public void mouseEntered(MouseEvent arg0) {
+//			
+//		}
+//		@Override
+//		public void mouseExited(MouseEvent arg0) {
+//			
+//		}
+//		@Override
+//		public void mousePressed(MouseEvent e) {
+//			isMousePressed = true;
+//			mousePosition = new Vector(e.getX(),e.getY());
+//		}
+//		@Override
+//		public void mouseReleased(MouseEvent arg0) {
+//			isMousePressed = false;
+//		}
+//		@Override
+//		public void mouseDragged(MouseEvent e) {
+//			isMousePressed = true;
+//			mousePosition = new Vector(e.getX(),e.getY());
+//		}
+//		@Override
+//		public void mouseMoved(MouseEvent arg0) {
+//			
+//		}
+//	};
+//		il.addMouseListener(ml);
+//		il.addMouseMotionListener(ml);
+//	}
+
 }

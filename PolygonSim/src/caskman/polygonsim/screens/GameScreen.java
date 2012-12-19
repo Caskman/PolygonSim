@@ -20,9 +20,9 @@ public abstract class GameScreen {
 		return isFullscreen;
 	}
 	
-	public abstract void update();
+	public abstract void updateScreen();
 	
-	public abstract void draw(Graphics2D g,float interpol);
+	public abstract void drawScreen(Graphics2D g,float interpol);
 	
 	public abstract void manageInput(InputEvent e);
 }

@@ -42,7 +42,7 @@ public class ScreenManager {
 	}
 	
 	
-	public void update() {
+	public void updateScreens() {
 //		GameScreen g = screens.get(screens.size()-1);
 		List<GameScreen> screensToInput =  new ArrayList<GameScreen>();
 		for (int i = screens.size() - 1; i >= 0; i--) {
@@ -60,14 +60,14 @@ public class ScreenManager {
 		}
 		
 		for (GameScreen s : screens) {
-			s.update();
+			s.updateScreen();
 		}
 	}
 	
-	public void draw(Graphics2D g, float interpol) {
+	public void drawScreens(Graphics2D g, float interpol) {
 		for (GameScreen s : screens) {
 			if (s.state != ScreenState.HIDDEN)
-				s.draw(g,interpol);
+				s.drawScreen(g,interpol);
 		}
 	}
 	

@@ -18,12 +18,6 @@ import caskman.polygonsim.screens.ScreenManager;
 
 
 public class Launcher {
-
-	
-	
-	
-	
-	
 	/**
 	 * @param args
 	 */
@@ -79,7 +73,4 @@ public class Launcher {
 		} finally {
 		}
 	}
-
-	
-	
 }

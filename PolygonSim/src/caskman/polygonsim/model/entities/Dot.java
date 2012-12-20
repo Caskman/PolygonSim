@@ -3,7 +3,7 @@ package caskman.polygonsim.model.entities;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.security.Policy.Parameters;
+import caskman.polygonsim.Parameters;
 
 import caskman.polygonsim.MainThread;
 import caskman.polygonsim.model.Collidable;
@@ -33,9 +33,6 @@ public class Dot extends CollidableMob {
 		ghostDuration = 0;
 	}
 	
-	public void setColor(Color color) {
-		this.color = color;
-	}
 	
 	@Override
 	protected void update(GameContext g) {
@@ -43,7 +40,7 @@ public class Dot extends CollidableMob {
 			return;
 		if (ghostDuration > MAX_GHOST_DURATION)
 			isGhost = false;
-		color = Color.RED;
+		color = Parameters.DOT_COLOR;
 		Vector newPos = Vector.add(position, velocity);
 		
 		if (newPos.x < 0 || newPos.x > model.getMapDims().width - dims.width) {
@@ -104,7 +101,7 @@ public class Dot extends CollidableMob {
 			((Dot)c).setDead(true);
 			Vector newVel = Vector.add(((Mob)c).velocity,velocity);
 			g.additions.add(new DynamicPolygon(model,position.x,position.y,newVel.x,newVel.y,2));
-			g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y,Color.RED));
+			g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y,Parameters.DOT_COLOR));
 		}
 	}
 

@@ -63,10 +63,13 @@ public class Parameters {
 	public static void save() {
 		FileWriter out = null;
 		try {
+			createParameterFilePath();
 			out = new FileWriter(new File(parameterFilePath));
 			ParameterCode[] codes = ParameterCode.values();
 			for (int i = 0; i < PARAMETER_COUNT; i++) {
 				saveParameter(out,codes[i]);
+				if (i != PARAMETER_COUNT-1)
+					out.write("\n");
 			}
 			out.close();
 		} catch (IOException e) {
@@ -74,6 +77,16 @@ public class Parameters {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static void createParameterFilePath() {
+		File f;
+		f = new File(gameDir);
+		if (!f.exists())
+			f.mkdir();
+		f = new File(parameterDir);
+		if (!f.exists())
+			f.mkdir();
 	}
 	
 	private static void saveParameter(FileWriter out,ParameterCode code) throws Exception {
@@ -97,8 +110,8 @@ public class Parameters {
 	
 	private static void set2Defaults() {
 		WINDOWED = false;
-		DOT_COLOR = Color.RED;
-		LINE_COLOR = Color.GREEN;
+		DOT_COLOR = Color.MAGENTA;
+		LINE_COLOR = Color.CYAN;
 		BACKGROUND_COLOR = Color.YELLOW;
 	}
 	
@@ -178,6 +191,6 @@ public class Parameters {
 	}
 	
 	private enum ParameterCode {
-		WINDOWED,NO_CODE,DOT_COLOR,LINE_COLOR,BACKGROUND_COLOR
+		WINDOWED,DOT_COLOR,LINE_COLOR,BACKGROUND_COLOR,NO_CODE
 	}
 }

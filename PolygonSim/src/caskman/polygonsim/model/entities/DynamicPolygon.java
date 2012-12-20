@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import caskman.polygonsim.MainThread;
+import caskman.polygonsim.Parameters;
 import caskman.polygonsim.model.Collidable;
 import caskman.polygonsim.model.GameContext;
 import caskman.polygonsim.model.GameModel;
@@ -66,7 +67,7 @@ public class DynamicPolygon extends CollidableMob {
 		
 		// draw connecting lines
 		
-		g.setColor(Color.GREEN);
+		g.setColor(Parameters.LINE_COLOR);
 		for (int i = 0; i < vertices; i++) {
 			Vector p1 = points.get(i);
 			Vector p2 = points.get((i+1)%vertices);
@@ -76,7 +77,7 @@ public class DynamicPolygon extends CollidableMob {
 		
 		//draw points
 		int halfDotSide = dotSide>>1;
-		g.setColor(Color.RED);
+		g.setColor(Parameters.DOT_COLOR);
 		for (Vector point : points) {
 			g.fillRect((int)point.x - halfDotSide, (int)point.y - halfDotSide, dotSide, dotSide);
 		}
@@ -140,7 +141,7 @@ public class DynamicPolygon extends CollidableMob {
 				g.additions.add(new Dot(model,collisionPosition.x,collisionPosition.y,xVel,yVel,true));
 			}
 			
-			g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y,Color.GREEN));
+			g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y,Parameters.LINE_COLOR));
 		}
 	}
 	

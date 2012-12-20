@@ -3,6 +3,7 @@ package caskman.polygonsim.screens;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -74,6 +75,10 @@ public class MainMenuScreen extends GameScreen {
 
 	@Override
 	public void manageInput(InputEvent e) {
+		if (e.isKeyInput()) {
+			if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				System.exit(0);
+		}
 		for (MenuItem m : menuItems) {
 			m.manageInput(e);
 		}

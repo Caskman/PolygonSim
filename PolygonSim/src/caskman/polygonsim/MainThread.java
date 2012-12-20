@@ -3,6 +3,7 @@ package caskman.polygonsim;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
 
 import caskman.polygonsim.screens.ScreenManager;
@@ -71,6 +72,7 @@ public class MainThread extends Thread {
 		Graphics2D g = null;
 		try {
 			g = (Graphics2D)bs.getDrawGraphics();
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 			draw(g,interpol);
 			if (!bs.contentsLost())
 				bs.show();

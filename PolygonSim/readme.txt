@@ -1,8 +1,8 @@
 Planned tweaks:
 census data
-distance independent, mass dependent, suction
-mass-dependent friction
 add score calculation
-add three separate modes, varying number of dots
 refine menu
-add options screen
+add how to play screen
+add some sort of background
+add ability to change color of dots and lines
+add windowed capability

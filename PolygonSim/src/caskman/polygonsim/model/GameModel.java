@@ -3,6 +3,7 @@ package caskman.polygonsim.model;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -138,6 +139,9 @@ public class GameModel {
 			
 			
 			mousePosition = e.getVector();
+		} else if (e.isKeyInput()) {
+			if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				System.exit(0);
 		}
 	}
 	

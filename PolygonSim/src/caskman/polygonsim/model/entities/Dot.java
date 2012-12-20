@@ -3,6 +3,7 @@ package caskman.polygonsim.model.entities;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.security.Policy.Parameters;
 
 import caskman.polygonsim.MainThread;
 import caskman.polygonsim.model.Collidable;
@@ -26,7 +27,7 @@ public class Dot extends CollidableMob {
 		
 		position = new Vector(xPos,yPos);
 		velocity = new Vector(xVel,yVel);
-		color = Color.RED;
+		color = Parameters.DOT_COLOR;
 		isDead = false;
 		isGhost = startAsGhost;
 		ghostDuration = 0;

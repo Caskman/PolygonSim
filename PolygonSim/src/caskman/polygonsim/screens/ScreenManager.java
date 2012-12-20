@@ -2,6 +2,8 @@ package caskman.polygonsim.screens;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -27,10 +29,11 @@ public class ScreenManager {
 		
 		screens = new ArrayList<GameScreen>();
 		
-		MouseAdapter m = new MyMouseAdapter();
+		MyInputAdapter m = new MyInputAdapter();
 		
 		il.addMouseListener(m);
 		il.addMouseMotionListener(m);
+		il.addKeyListener(m);
 	}
 	
 //	public Context getContext() {
@@ -100,7 +103,7 @@ public class ScreenManager {
 		screens = new ArrayList<GameScreen>();
 	}
 	
-	class MyMouseAdapter extends MouseAdapter {
+	class MyInputAdapter extends MouseAdapter implements KeyListener {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_CLICKED,e.getButton()));
@@ -129,6 +132,18 @@ public class ScreenManager {
 		@Override
 		public void mouseMoved(MouseEvent e) {
 			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_MOVED,e.getButton()));
+		}
+		@Override
+		public void keyPressed(KeyEvent e) {
+			inputQueue.offer(new InputEvent(InputEvent.KEY_PRESSED,e.getKeyCode()));
+		}
+		@Override
+		public void keyReleased(KeyEvent e) {
+			inputQueue.offer(new InputEvent(InputEvent.KEY_RELEASED,e.getKeyCode()));
+		}
+		@Override
+		public void keyTyped(KeyEvent e) {
+			inputQueue.offer(new InputEvent(InputEvent.KEY_TYPED,e.getKeyCode()));
 		}
 	}
 	

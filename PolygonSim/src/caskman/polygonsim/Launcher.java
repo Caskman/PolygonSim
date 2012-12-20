@@ -22,8 +22,11 @@ public class Launcher {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Parameters.load();
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
+//		System.setProperty("awt.useSystemAAFontSettings","on");
+//		System.setProperty("swing.aatext", "true");
 		try {
 			GraphicsConfiguration gc = gd.getDefaultConfiguration();
 			Frame f = new Frame(gc);

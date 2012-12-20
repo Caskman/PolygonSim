@@ -1,6 +1,7 @@
 package caskman.polygonsim.screens;
 
 import java.awt.Component;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
@@ -20,4 +21,7 @@ public class InputListener {
 		c.addMouseListener(l);
 	}
 	
+	public void addKeyListener(KeyListener l) {
+		c.addKeyListener(l);
+	}
 }

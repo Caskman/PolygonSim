@@ -103,31 +103,32 @@ public class ScreenManager {
 	class MyMouseAdapter extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_CLICKED));
+			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_CLICKED,e.getButton()));
 		}
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_ENTERED));
+			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_ENTERED,e.getButton()));
 		}
 		@Override
 		public void mouseExited(MouseEvent e) {
-			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_EXITED));
+			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_EXITED,e.getButton()));
 		}
 		@Override
 		public void mousePressed(MouseEvent e) {
-			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_PRESSED));
+			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_PRESSED,e.getButton()));
+			
 		}
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_RELEASED));
+			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_RELEASED,e.getButton()));
 		}
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_DRAGGED));
+			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_DRAGGED,e.getButton()));
 		}
 		@Override
 		public void mouseMoved(MouseEvent e) {
-			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_MOVED));
+			inputQueue.offer(new InputEvent(new Vector(e.getPoint()),InputEvent.MOUSE_MOVED,e.getButton()));
 		}
 	}
 	

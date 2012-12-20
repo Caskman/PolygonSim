@@ -36,6 +36,8 @@ public class GameModel {
 	private Vector cameraPosition;
 	private Vector cameraVelocity;
 	private Vector mousePosition;
+	private Vector mousePressMapPosition;
+	private boolean isMouseWheelPressed;
 	
 	
 	public GameModel(Dimension screenDims) {
@@ -59,6 +61,7 @@ public class GameModel {
 	private void initialize() {
 		r = new Random();
 		isMousePressed = false;
+		isMouseWheelPressed = false;
 		int numBlocks = (int) (screenDims.width*screenDims.height*dotRatio);
 		dots = new ArrayList<Mob>(numBlocks);
 		mapDims = new Dimension(2000,2000);
@@ -76,6 +79,7 @@ public class GameModel {
 		
 		
 		mousePosition = new Vector();
+		mousePressMapPosition = new Vector();
 		
 //		initializeInputListeners(il);
 		
@@ -90,8 +94,14 @@ public class GameModel {
 	public void manageInput(InputEvent e) {
 		if (e.getType() == InputEvent.MOUSE_PRESSED || e.getType() == InputEvent.MOUSE_DRAGGED) {
 			isMousePressed = true;
+			if (e.getType() == InputEvent.MOUSE_PRESSED)
+				mousePressMapPosition = calcMapPosition(e.getVector());
+			if (e.getButton() == 3)
+				isMouseWheelPressed = true;
 		} else if (e.getType() == InputEvent.MOUSE_RELEASED || e.getType() == InputEvent.MOUSE_MOVED) {
 			isMousePressed = false;
+			if (e.getButton() == 3)
+				isMouseWheelPressed = false;
 		}
 		
 		if (e.isMouseInput())
@@ -99,25 +109,29 @@ public class GameModel {
 	}
 	
 	private void processInput() {
-		if (isMousePressed) {
+		if (isMouseWheelPressed) {
+			Vector displacement = Vector.displacement(calcMapPosition(mousePosition),mousePressMapPosition);
+			cameraVelocity = Vector.scalar(.5F,displacement);
+		} else if (isMousePressed) {
 			applySuctionField(calcMapPosition(mousePosition));
-		}
-		if (mousePosition.x == 0) {
-			cameraVelocity = Vector.add(new Vector(0-MAP_MOVEMENT_SPEED,0),cameraVelocity);
-		}
-		if (mousePosition.y == 0) {
-			cameraVelocity = Vector.add(new Vector(0,0-MAP_MOVEMENT_SPEED),cameraVelocity);
-		}
-		if (mousePosition.x == screenDims.width - 1) {
-			cameraVelocity = Vector.add(new Vector(MAP_MOVEMENT_SPEED,0),cameraVelocity);
-		}
-		if (mousePosition.y == screenDims.height - 1) {
-			cameraVelocity = Vector.add(new Vector(0,MAP_MOVEMENT_SPEED),cameraVelocity);
+		} else {
+			if (mousePosition.x == 0) {
+				cameraVelocity = Vector.add(new Vector(0-MAP_MOVEMENT_SPEED,0),cameraVelocity);
+			}
+			if (mousePosition.x == screenDims.width - 1) {
+				cameraVelocity = Vector.add(new Vector(MAP_MOVEMENT_SPEED,0),cameraVelocity);
+			}
+			if (mousePosition.y == 0) {
+				cameraVelocity = Vector.add(new Vector(0,0-MAP_MOVEMENT_SPEED),cameraVelocity);
+			}
+			if (mousePosition.y == screenDims.height - 1) {
+				cameraVelocity = Vector.add(new Vector(0,MAP_MOVEMENT_SPEED),cameraVelocity);
+			}
 		}
 	}
 	
 	private Vector calcMapPosition(Vector v) {
-		return Vector.add(mousePosition,cameraPosition);
+		return Vector.add(v,cameraPosition);
 	}
 	
 	private void applySuctionField(Vector source) {
@@ -172,11 +186,13 @@ public class GameModel {
 		Vector temp = Vector.add(cameraPosition,cameraVelocity);
 		if (temp.x < 0 || temp.x + screenDims.width > mapDims.width) {
 			cameraVelocity.x = 0F;
+			temp.x = (temp.x < 0)?0:mapDims.width - screenDims.width;
 		}
 		if (temp.y < 0 || temp.y + screenDims.height > mapDims.height) {
 			cameraVelocity.y = 0F;
+			temp.y = (temp.y < 0)?0:mapDims.height - screenDims.height;
 		}
-		cameraPosition = Vector.add(cameraPosition,cameraVelocity);
+		cameraPosition = temp;
 		cameraVelocity = Vector.scalar(.75F,cameraVelocity);
 	}
 	
@@ -340,7 +356,10 @@ public class GameModel {
 		g.setColor(Color.WHITE);
 		
 		g.drawString("Mouse is "+((isMousePressed)?"pressed":"not pressed"), 0, 80);
-		g.drawString(mousePosition.toString(),0,100);
+		g.drawString("Mouse wheel is "+((isMouseWheelPressed)?"pressed.":"not pressed."),0,100);
+		g.drawString("Mouse Press Position is "+mousePressMapPosition.toString(),0,120);
+		g.drawString("Screen Position: "+mousePosition.toString(),0,140);
+		g.drawString("Map Position: "+calcMapPosition(mousePosition),0,160);
 	}
 
 

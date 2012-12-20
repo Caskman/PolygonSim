@@ -15,10 +15,12 @@ public class InputEvent {
 	
 	private int type;
 	private Vector v;
+	private int button;
 
-	public InputEvent(Vector v,int type) {
+	public InputEvent(Vector v,int type,int button) {
 		this.v = v;
 		this.type = type;
+		this.button = button;
 	}
 	
 	public int getType() {
@@ -33,5 +35,8 @@ public class InputEvent {
 		return type >= MOUSE_CLICKED && type <= MOUSE_RELEASED;
 	}
 	
+	public int getButton() {
+		return button;
+	}
 
 }

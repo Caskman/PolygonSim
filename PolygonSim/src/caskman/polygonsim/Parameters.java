@@ -110,8 +110,8 @@ public class Parameters {
 	
 	private static void set2Defaults() {
 		WINDOWED = false;
-		DOT_COLOR = Color.MAGENTA;
-		LINE_COLOR = Color.CYAN;
+		DOT_COLOR = Color.RED;
+		LINE_COLOR = Color.GREEN;
 		BACKGROUND_COLOR = Color.YELLOW;
 	}
 	

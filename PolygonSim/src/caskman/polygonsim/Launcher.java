@@ -32,12 +32,19 @@ public class Launcher {
 			Frame f = new Frame(gc);
 			f.setUndecorated(true);
 			f.setIgnoreRepaint(true);
-			gd.setFullScreenWindow(f);
+			Dimension dims = Toolkit.getDefaultToolkit().getScreenSize();
+			if (!Parameters.WINDOWED)
+				gd.setFullScreenWindow(f);
+			else {
+				f.setLocation(0, 0);
+				f.setSize(dims);
+				f.setVisible(true);
+			}
 //          if (gd.isDisplayChangeSupported()) {
 //                chooseBestDisplayMode(gd);
 //            }
-			Dimension dims = Toolkit.getDefaultToolkit().getScreenSize();
-			gd.setDisplayMode(new DisplayMode(dims.width,dims.height,32,0));
+			if (!Parameters.WINDOWED)
+				gd.setDisplayMode(new DisplayMode(dims.width,dims.height,32,0));
 	  
 			BufferStrategy bs;
 			if ((bs = f.getBufferStrategy()) == null) {

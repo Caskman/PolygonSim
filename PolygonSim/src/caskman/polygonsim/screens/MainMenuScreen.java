@@ -57,7 +57,6 @@ public class MainMenuScreen extends GameScreen {
 		
 	}
 	
-	
 	@Override
 	public void updateScreen() {
 		

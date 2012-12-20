@@ -27,7 +27,6 @@ public class GameModel {
 	private List<Mob> explosions;
 	private List<Mob> polygons;
 	private QuadTree q;
-	private boolean isMousePressed;
 	private List<Mob> allPhysicalEntities;
 	private static float SUCTION_RADIUS = 200F;
 	private static float MAX_SUCTION_ACCEL = 50F;
@@ -36,8 +35,11 @@ public class GameModel {
 	private Vector cameraPosition;
 	private Vector cameraVelocity;
 	private Vector mousePosition;
-	private Vector mousePressMapPosition;
-	private boolean isMouseWheelPressed;
+	private Vector rightPressPosition;
+	private Vector wheelPressPosition;
+	private boolean leftMousePressed;
+	private boolean mouseWheelPressed;
+	private boolean rightMousePressed;
 	
 	
 	public GameModel(Dimension screenDims) {
@@ -60,8 +62,9 @@ public class GameModel {
 	
 	private void initialize() {
 		r = new Random();
-		isMousePressed = false;
-		isMouseWheelPressed = false;
+		leftMousePressed = false;
+		mouseWheelPressed = false;
+		rightMousePressed = false;
 		int numBlocks = (int) (screenDims.width*screenDims.height*dotRatio);
 		dots = new ArrayList<Mob>(numBlocks);
 		mapDims = new Dimension(2000,2000);
@@ -79,7 +82,8 @@ public class GameModel {
 		
 		
 		mousePosition = new Vector();
-		mousePressMapPosition = new Vector();
+		rightPressPosition = new Vector();
+		wheelPressPosition = new Vector();
 		
 //		initializeInputListeners(il);
 		
@@ -92,28 +96,61 @@ public class GameModel {
 	}
 	
 	public void manageInput(InputEvent e) {
-		if (e.getType() == InputEvent.MOUSE_PRESSED || e.getType() == InputEvent.MOUSE_DRAGGED) {
-			isMousePressed = true;
-			if (e.getType() == InputEvent.MOUSE_PRESSED)
-				mousePressMapPosition = calcMapPosition(e.getVector());
-			if (e.getButton() == 3)
-				isMouseWheelPressed = true;
-		} else if (e.getType() == InputEvent.MOUSE_RELEASED || e.getType() == InputEvent.MOUSE_MOVED) {
-			isMousePressed = false;
-			if (e.getButton() == 3)
-				isMouseWheelPressed = false;
-		}
-		
-		if (e.isMouseInput())
+		if (e.isMouseInput()) {
+			switch (e.getType()) {
+			case InputEvent.MOUSE_PRESSED:
+				switch (e.getButton()) {
+				case 0:
+					break;
+				case 1:
+					leftMousePressed = true;
+					break;
+				case 2:
+					mouseWheelPressed = true;
+					wheelPressPosition = e.getVector();
+					break;
+				case 3:
+					rightMousePressed = true;
+					rightPressPosition = calcMapPosition(e.getVector());
+					break;
+				}
+				break;
+			case InputEvent.MOUSE_RELEASED:
+				switch (e.getButton()) {
+				case 0:
+					break;
+				case 1:
+					leftMousePressed = false;
+					break;
+				case 2:
+					mouseWheelPressed = false;
+					break;
+				case 3:
+					rightMousePressed = false;
+					break;
+				}
+			case InputEvent.MOUSE_CLICKED:
+			case InputEvent.MOUSE_DRAGGED:
+			case InputEvent.MOUSE_ENTERED:
+			case InputEvent.MOUSE_EXITED:
+			case InputEvent.MOUSE_MOVED:
+			}
+			
+			
 			mousePosition = e.getVector();
+		}
 	}
 	
 	private void processInput() {
-		if (isMouseWheelPressed) {
-			Vector displacement = Vector.displacement(calcMapPosition(mousePosition),mousePressMapPosition);
-			cameraVelocity = Vector.scalar(.5F,displacement);
-		} else if (isMousePressed) {
+		if (leftMousePressed) {
 			applySuctionField(calcMapPosition(mousePosition));
+		}
+		if (rightMousePressed) {
+			Vector displacement = Vector.displacement(calcMapPosition(mousePosition),rightPressPosition);
+			cameraVelocity = Vector.scalar(.5F,displacement);
+		} else if (mouseWheelPressed)  {
+			Vector displacement = Vector.displacement(wheelPressPosition,mousePosition);
+			cameraVelocity = Vector.scalar(.1F,displacement);
 		} else {
 			if (mousePosition.x == 0) {
 				cameraVelocity = Vector.add(new Vector(0-MAP_MOVEMENT_SPEED,0),cameraVelocity);
@@ -355,9 +392,9 @@ public class GameModel {
 	private void drawMouseInput(Graphics2D g,float interpol) {
 		g.setColor(Color.WHITE);
 		
-		g.drawString("Mouse is "+((isMousePressed)?"pressed":"not pressed"), 0, 80);
-		g.drawString("Mouse wheel is "+((isMouseWheelPressed)?"pressed.":"not pressed."),0,100);
-		g.drawString("Mouse Press Position is "+mousePressMapPosition.toString(),0,120);
+		g.drawString("Mouse is "+((leftMousePressed)?"pressed":"not pressed"), 0, 80);
+		g.drawString("Mouse wheel is "+((mouseWheelPressed)?"pressed.":"not pressed."),0,100);
+		g.drawString("Mouse Press Position is "+rightPressPosition.toString(),0,120);
 		g.drawString("Screen Position: "+mousePosition.toString(),0,140);
 		g.drawString("Map Position: "+calcMapPosition(mousePosition),0,160);
 	}

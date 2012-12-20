@@ -1,6 +1,7 @@
 package caskman.polygonsim.model.entities;
 
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 
 import caskman.polygonsim.model.GameContext;
@@ -38,13 +39,13 @@ public abstract class Mob {
 		update(g);
 	}
 	
-	public void drawMob(Graphics2D g,float interpol) {
-		draw(g,interpol);
+	public void drawMob(Graphics2D g,float interpol,Vector offset) {
+		draw(g,interpol,offset);
 	}
 	
 	protected abstract void update(GameContext g);
 	
-	protected abstract void draw(Graphics2D g,float interpol);
+	protected abstract void draw(Graphics2D g,float interpol,Vector offset);
 	
 	public Vector getVelocity() {
 		return velocity;
@@ -57,5 +58,7 @@ public abstract class Mob {
 	public Vector getPosition() {
 		return position;
 	}
+	
+	public abstract Dimension getDims();
 	
 }

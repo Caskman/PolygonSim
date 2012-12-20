@@ -43,9 +43,9 @@ public class Explosion extends Mob {
 	}
 
 	@Override
-	protected void draw(Graphics2D g, float interpol) {
+	protected void draw(Graphics2D g, float interpol,Vector offset) {
 		for (Particle p : particles) {
-			p.draw(g,interpol);
+			p.draw(g,interpol,offset);
 		}
 	}
 
@@ -60,6 +60,10 @@ public class Explosion extends Mob {
 		for (Particle p : particles) {
 			p.update(g);
 		}
+	}
+	
+	public Dimension getDims() {
+		return new Dimension(1,1);
 	}
 	
 	private class Particle extends Mob {
@@ -78,12 +82,12 @@ public class Explosion extends Mob {
 		}
 
 		@Override
-		protected void draw(Graphics2D g, float interpol) {
+		protected void draw(Graphics2D g, float interpol,Vector offset) {
 //			int radius = dims.width>>1; // divided by 2
 //			canvas.drawCircle((position.x + velocity.x*interpol) - radius, (position.y + velocity.y * interpol) - radius, radius, paint);
 //			g.drawCircle((position.x + velocity.x*interpol), (position.y + velocity.y * interpol), dims.width>>1);
 			g.setColor(color);
-			g.fillArc((int)(position.x + velocity.x*interpol), (int)(position.y + velocity.y*interpol), dims.width, dims.height, 0, 360);
+			g.fillArc((int)(position.x + velocity.x*interpol + offset.x), (int)(position.y + velocity.y*interpol + offset.y), dims.width, dims.height, 0, 360);
 		}
 
 		@Override
@@ -96,6 +100,10 @@ public class Explosion extends Mob {
 //			g.backdrop.drawCircle(position.x+half, position.y+half, SPLATTER_SIZE, parentPaint);
 //			if (duration > VISIBLE_DURATION) 
 //				paint.setColor(paint.getColor()-((int)ALPHA_DELTA));
+		}
+		
+		public Dimension getDims() {
+			return dims;
 		}
 		
 	}

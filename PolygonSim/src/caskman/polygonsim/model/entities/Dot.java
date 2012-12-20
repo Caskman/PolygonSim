@@ -45,22 +45,22 @@ public class Dot extends CollidableMob {
 		color = Color.RED;
 		Vector newPos = Vector.add(position, velocity);
 		
-		if (newPos.x < 0 || newPos.x > model.getScreenDims().width - dims.width) {
+		if (newPos.x < 0 || newPos.x > model.getMapDims().width - dims.width) {
 			velocity.x = velocity.x * -1;
-			position.x = (newPos.x < 0)?0:model.getScreenDims().width - dims.width;
+			position.x = (newPos.x < 0)?0:model.getMapDims().width - dims.width;
 		}
-		if (newPos.y < 0 || newPos.y > model.getScreenDims().height - dims.height) {
+		if (newPos.y < 0 || newPos.y > model.getMapDims().height - dims.height) {
 			velocity.y = velocity.y * -1;
-			position.y = (newPos.y < 0)?0:model.getScreenDims().height - dims.height;
+			position.y = (newPos.y < 0)?0:model.getMapDims().height - dims.height;
 		}
 		position = Vector.add(position, velocity);
 		ghostDuration++;
 	}
 
 	@Override
-	protected void draw(Graphics2D g, float interpol) {
-		int x = (int) (getX() + getXVel()*interpol);
-		int y = (int) (getY() + getYVel()*interpol);
+	protected void draw(Graphics2D g, float interpol,Vector offset) {
+		int x = (int) (getX() + getXVel()*interpol + offset.x);
+		int y = (int) (getY() + getYVel()*interpol + offset.y);
 		if (isGhost)
 			g.setColor(Color.WHITE);
 		else 
@@ -107,6 +107,9 @@ public class Dot extends CollidableMob {
 		}
 	}
 
+	public Dimension getDims() {
+		return dims;
+	}
 
 
 

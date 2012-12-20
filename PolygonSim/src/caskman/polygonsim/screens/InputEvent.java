@@ -9,7 +9,7 @@ public class InputEvent {
 	public final static int MOUSE_ENTERED = 2;
 	public final static int MOUSE_EXITED = 3;
 	public final static int MOUSE_MOVED = 4;
-	public final static int MOUSE_PRESSED = 5; 
+	public final static int MOUSE_PRESSED = 5;
 	public final static int MOUSE_RELEASED = 6;
 	
 	
@@ -29,6 +29,9 @@ public class InputEvent {
 		return v;
 	}
 	
+	public boolean isMouseInput() {
+		return type >= MOUSE_CLICKED && type <= MOUSE_RELEASED;
+	}
 	
 
 }

@@ -37,25 +37,25 @@ public class DynamicPolygon extends CollidableMob {
 		
 		Vector newPos = Vector.add(position, velocity);
 		
-		if (newPos.x < 0 || newPos.x > model.getScreenDims().width - dims.width) {
+		if (newPos.x < 0 || newPos.x > model.getMapDims().width - dims.width) {
 			velocity.x = velocity.x * -1;
-			position.x = (newPos.x < 0)?0:model.getScreenDims().width - dims.width;
+			position.x = (newPos.x < 0)?0:model.getMapDims().width - dims.width;
 		}
-		if (newPos.y < 0 || newPos.y > model.getScreenDims().height - dims.height) {
+		if (newPos.y < 0 || newPos.y > model.getMapDims().height - dims.height) {
 			velocity.y = velocity.y * -1;
-			position.y = (newPos.y < 0)?0:model.getScreenDims().height - dims.height;
+			position.y = (newPos.y < 0)?0:model.getMapDims().height - dims.height;
 		}
 		position = Vector.add(position, velocity);
 	}
 
 	@Override
-	protected void draw(Graphics2D g, float interpol) {
+	protected void draw(Graphics2D g, float interpol,Vector offset) {
 		List<Vector> points = new ArrayList<Vector>(vertices);
 		
 		float pointAngleInterval = tpi/vertices;
 		float pointAngle = angle + interpol*angleSpeed;
 		int radius = dims.width>>1;
-		Vector interpolPosition = Vector.add(position,Vector.scalar(interpol, velocity));
+		Vector interpolPosition = Vector.add(Vector.add(position,offset),Vector.scalar(interpol, velocity));
 		Vector interpolCenterPosition = Vector.add(interpolPosition,new Vector(dims.width>>1,dims.height>>1));
 		for (int i = 0; i < vertices; i++) {
 			Vector pointOffset = new Vector((float)(radius*Math.cos(pointAngle)),(float)(radius*Math.sin(pointAngle)));
@@ -142,6 +142,10 @@ public class DynamicPolygon extends CollidableMob {
 			
 			g.additions.add(new Explosion(model,collisionPosition.x,collisionPosition.y,Color.GREEN));
 		}
+	}
+	
+	public Dimension getDims() {
+		return dims;
 	}
 
 }

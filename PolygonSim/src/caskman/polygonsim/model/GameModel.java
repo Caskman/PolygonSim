@@ -13,7 +13,8 @@ import caskman.polygonsim.model.entities.DynamicPolygon;
 import caskman.polygonsim.model.entities.Explosion;
 import caskman.polygonsim.model.entities.Mob;
 import caskman.polygonsim.screens.InputEvent;
-import caskman.polygonsim.screens.InputListener;
+import caskman.polygonsim.screens.ScreenManager;
+import caskman.polygonsim.screens.OptionsScreen;
 
 
 public class GameModel {
@@ -41,11 +42,13 @@ public class GameModel {
 	private boolean leftMousePressed;
 	private boolean mouseWheelPressed;
 	private boolean rightMousePressed;
+	private boolean isPaused;
+	private ScreenManager manager;
 	
 	
-	public GameModel(Dimension screenDims) {
+	public GameModel(ScreenManager manager,Dimension screenDims) {
 		this.screenDims = screenDims;
-		
+		this.manager = manager;
 		initialize();
 	}
 	
@@ -66,6 +69,7 @@ public class GameModel {
 		leftMousePressed = false;
 		mouseWheelPressed = false;
 		rightMousePressed = false;
+		isPaused = false;
 		int numBlocks = (int) (screenDims.width*screenDims.height*dotRatio);
 		dots = new ArrayList<Mob>(numBlocks);
 		mapDims = new Dimension(2000,2000);
@@ -140,9 +144,15 @@ public class GameModel {
 			
 			mousePosition = e.getVector();
 		} else if (e.isKeyInput()) {
-			if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-				System.exit(0);
+			if (e.getType() == InputEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+				manager.addScreen(new OptionsScreen(manager,false,this));
+				isPaused = true;
+			}
 		}
+	}
+	
+	public void setPaused(boolean b) {
+		isPaused = b;
 	}
 	
 	private void processInput() {
@@ -238,6 +248,8 @@ public class GameModel {
 	}
 	
 	public void update() {
+		if (isPaused)
+			return;
 		
 		processInput();
 		
@@ -352,6 +364,8 @@ public class GameModel {
 	}
 	
 	public void draw(Graphics2D g,float interpol) {
+		if (isPaused)
+			interpol = 0F;
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, screenDims.width, screenDims.height);
 		Vector offset = calcMapScreenOffset(interpol);

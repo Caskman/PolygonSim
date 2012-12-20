@@ -25,4 +25,8 @@ public abstract class GameScreen {
 	public abstract void drawScreen(Graphics2D g,float interpol);
 	
 	public abstract void manageInput(InputEvent e);
+	
+	public void exitScreen() {
+		manager.removeScreen(this);
+	}
 }

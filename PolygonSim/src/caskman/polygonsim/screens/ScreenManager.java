@@ -54,11 +54,12 @@ public class ScreenManager {
 			}
 		}
 		
+		GameScreen s1 = screens.get(screens.size()-1);
 		while (!inputQueue.isEmpty()) {
 			InputEvent e = inputQueue.poll();
-			for (GameScreen s : screensToInput) {
-				s.manageInput(e);
-			}
+//			for (GameScreen s : screensToInput) {
+				s1.manageInput(e);
+//			}
 //			g.manageInput(e);
 		}
 		

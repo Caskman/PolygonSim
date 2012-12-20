@@ -10,7 +10,7 @@ public class MainGameScreen extends GameScreen {
 	
 	public MainGameScreen(ScreenManager manager, boolean isFullscreen) {
 		super(manager, isFullscreen);
-		model = new GameModel(manager.getScreenDims());
+		model = new GameModel(manager,manager.getScreenDims());
 	}
 
 	@Override

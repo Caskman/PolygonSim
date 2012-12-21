@@ -32,24 +32,44 @@ public class OptionsScreen extends GameScreen {
 		optionItems = new ArrayList<Item>();
 		OptionItem i;
 		StackPanel sp = new StackPanel();
-		Dimension stackDims = new Dimension(manager.getScreenDims().width/8,5*manager.getScreenDims().height/8);
+		Dimension stackDims = new Dimension(manager.getScreenDims().width/8,3*manager.getScreenDims().height/8);
 		sp.setDims(stackDims);
-		sp.setLocation(new Vector((manager.getScreenDims().width - stackDims.width)/2,3*manager.getScreenDims().height/8));
+		sp.setPosition(new Vector((manager.getScreenDims().width - stackDims.width)/2,3*manager.getScreenDims().height/8));
+		sp.setOrientation(StackPanel.VERTICAL);
+		optionItems.add(sp);
 		
 		
 		i = new OptionItem();
 		i.setText("Options");
 		i.setTextSize(40);
-		i.setCenterPosition(new Vector(manager.getScreenDims().width/2,manager.getScreenDims().height/4));
+		i.setDims(new Dimension(200,50));
+		i.setPosition(new Vector((manager.getScreenDims().width - i.getDims().width)/2,manager.getScreenDims().height/4));
 		optionItems.add(i);
 		
+		i = new OptionItem();
+		i.setText("Change Window Mode");
+		i.setDims(new Dimension(150,20));
+		sp.add(i);
 		
+		i = new OptionItem();
+		i.setText("Change Dot Color");
+		i.setDims(new Dimension(150,20));
+		sp.add(i);
 		
+		i = new OptionItem();
+		i.setText("Change Line Color");
+		i.setDims(new Dimension(150,20));
+		sp.add(i);
+		
+		i = new OptionItem();
+		i.setText("Change Background Color");
+		i.setDims(new Dimension(150,20));
+		sp.add(i);
 		
 		i = new OptionItem();
 		i.setText("Exit");
+		i.setDims(new Dimension(100,20));
 		i.setTextSize(20);
-//		i.setCenterPosition(new Vector(manager.getScreenDims().width/2,3*manager.getScreenDims().height/4));
 		i.addOptionItemListener(new OptionItemListener() {
 			@Override
 			public void itemActivated() {
@@ -79,7 +99,7 @@ public class OptionsScreen extends GameScreen {
 		g.setColor(Color.WHITE);
 		g.drawRect(r.x,r.y,r.width,r.height);
 		
-		for (OptionItem i : optionItems) {
+		for (Item i : optionItems) {
 			i.draw(g,interpol);
 		}
 	}
@@ -93,16 +113,16 @@ public class OptionsScreen extends GameScreen {
 			}
 		}
 		
-		for (OptionItem i : optionItems) {
+		for (Item i : optionItems) {
 			i.manageInput(e);
 		}
 	}
 	
-	private class OptionItem {
+	private class OptionItem extends Item {
 		
 		private String text;
 		private int textSize;
-		private Vector centerPosition;
+//		private Vector centerPosition;
 		private List<OptionItemListener> listeners;
 		private Dimension dims;
 		Vector position;
@@ -110,6 +130,9 @@ public class OptionsScreen extends GameScreen {
 		
 		public OptionItem() {
 			listeners = new LinkedList<OptionItemListener>();
+			position = textPosition = null;
+			dims = null;
+			textSize = 12;
 		}
 		
 		public void setText(String s) {
@@ -120,31 +143,42 @@ public class OptionsScreen extends GameScreen {
 			textSize = size;
 		}
 		
-		public void setCenterPosition(Vector v) {
-			centerPosition = v;
-		}
+//		@Override
+//		public void setCenterPosition(Vector v) {
+//			centerPosition = v;
+//		}
 		
 		public void addOptionItemListener(OptionItemListener l) {
 			listeners.add(l);
 		}
 		
-		private void updateTextDimsAndPosition(Graphics2D g) {
-			FontMetrics m = g.getFontMetrics();
-			int padding = 4;
-			dims = new Dimension(m.stringWidth(text) + padding,m.getAscent() + padding);
-			position = new Vector(centerPosition.x - dims.width/2,centerPosition.y - dims.height/2);
-			textPosition = new Vector(position.x + padding/2,centerPosition.y + m.getDescent() + m.getLeading() + padding/2);
+//		@Override
+//		public void updateDimsandPositions() {
+//			FontMetrics m = new MyFontMetrics(getFont());
+//			int padding = 4;
+//			dims = new Dimension(m.stringWidth(text) + padding,m.getAscent() + padding);
+//			position = new Vector(centerPosition.x - dims.width/2,centerPosition.y - dims.height/2);
+//			textPosition = new Vector(position.x + padding/2,centerPosition.y + m.getDescent() + m.getLeading() + padding/2);
+//		}
+		
+		private void updateTextPosition(FontMetrics m) {
+			Dimension textDims = new Dimension(m.stringWidth(text),m.getHeight());
+			textPosition = new Vector(position.x + (dims.width - textDims.width)/2,position.y + (dims.height - textDims.height)/2 + m.getAscent());
 		}
 		
+		@Override
 		public void draw(Graphics2D g,float interpol) {
+//			if (position == null)
+//				updateDimsandPositions();
 			g.setColor(Color.WHITE);
-			g.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,textSize));
-			updateTextDimsAndPosition(g);
+			g.setFont(getFont());
+			updateTextPosition(g.getFontMetrics());
 			
 //			g.drawRect((int)position.x, (int)position.y, dims.width, dims.height);
 			g.drawString(text,textPosition.x,textPosition.y);
 		}
 		
+		@Override
 		public void manageInput(InputEvent e) {
 			if (dims == null)
 				return;
@@ -163,7 +197,33 @@ public class OptionsScreen extends GameScreen {
 			}
 		}
 		
+		private Font getFont() {
+			return new Font(Font.SANS_SERIF,Font.PLAIN,textSize);
+		}
 		
+		private class MyFontMetrics extends FontMetrics {
+
+			public MyFontMetrics(Font f) {
+				super(f);
+			}
+			
+		}
+
+
+		@Override
+		public void setPosition(Vector v) {
+			position = v;
+		}
+
+		@Override
+		public void setDims(Dimension d) {
+			dims = d;
+		}
+
+		@Override
+		public Dimension getDims() {
+			return dims;
+		}
 	}
 	
 	private interface OptionItemListener {

@@ -13,6 +13,7 @@ import java.util.List;
 
 import caskman.polygonsim.model.GameModel;
 import caskman.polygonsim.model.Vector;
+import caskman.polygonsim.Launcher;
 
 public class OptionsScreen extends GameScreen {
 	
@@ -43,7 +44,7 @@ public class OptionsScreen extends GameScreen {
 		i.addOptionItemListener(new OptionItemListener() {
 			@Override
 			public void itemActivated() {
-				System.exit(0);
+				Launcher.exit();
 			}
 		});
 		optionItems[1] = i;
@@ -61,7 +62,7 @@ public class OptionsScreen extends GameScreen {
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5F));
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
-		g.setComposite(AlphaComposite.Src);
+		g.setComposite(AlphaComposite.SrcOver);
 		
 		Rectangle r = new Rectangle(manager.getScreenDims().width/8, manager.getScreenDims().height/8, 3*manager.getScreenDims().width/4, 3*manager.getScreenDims().height/4);
 		g.setColor(Color.BLACK);

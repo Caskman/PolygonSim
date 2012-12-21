@@ -23,6 +23,7 @@ public class Launcher {
 	 */
 	public static void main(String[] args) {
 		Parameters.load();
+		Profiler.initialize(false);
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 //		System.setProperty("awt.useSystemAAFontSettings","on");
@@ -83,4 +84,9 @@ public class Launcher {
 		} finally {
 		}
 	}
+
+	public static void exit() {
+		System.exit(0);
+	}
+	
 }

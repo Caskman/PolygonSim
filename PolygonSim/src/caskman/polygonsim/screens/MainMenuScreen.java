@@ -12,6 +12,7 @@ import java.util.List;
 import org.w3c.dom.css.Rect;
 
 import caskman.polygonsim.model.Vector;
+import caskman.polygonsim.Launcher;
 
 
 public class MainMenuScreen extends GameScreen {
@@ -76,7 +77,7 @@ public class MainMenuScreen extends GameScreen {
 	public void manageInput(InputEvent e) {
 		if (e.isKeyInput()) {
 			if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-				System.exit(0);
+				Launcher.exit();
 		}
 		for (MenuItem m : menuItems) {
 			m.manageInput(e);

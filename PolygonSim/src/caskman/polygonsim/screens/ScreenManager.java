@@ -12,7 +12,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 import caskman.polygonsim.model.Vector;
-
+import caskman.polygonsim.Profiler;
 
 
 public class ScreenManager {
@@ -69,9 +69,13 @@ public class ScreenManager {
 	}
 	
 	public void drawScreens(Graphics2D g, float interpol) {
+//		int i = 0;
 		for (GameScreen s : screens) {
-			if (s.state != ScreenState.HIDDEN)
+			if (s.state != ScreenState.HIDDEN) {
 				s.drawScreen(g,interpol);
+//				Profiler.lapRestart("Draw Screen "+(i+1));
+			}
+//			i++;
 		}
 	}
 	

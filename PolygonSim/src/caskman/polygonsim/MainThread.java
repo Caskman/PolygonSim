@@ -43,6 +43,7 @@ public class MainThread extends Thread {
 			
 			
 			framesSkipped = 0;
+//			Profiler.start();
 			while ((System.currentTimeMillis() > nextFrameTicks) && (framesSkipped < MAX_FRAMESKIP)) {
 				updateTime = System.currentTimeMillis();
 				update();
@@ -52,6 +53,7 @@ public class MainThread extends Thread {
 				
 				framesSkipped++;
 			}
+//			Profiler.lapRestart("Update");
 			
 			long systemMil = System.currentTimeMillis();
 			long num = systemMil + TICKS_PER_FRAME - nextFrameTicks;
@@ -60,6 +62,7 @@ public class MainThread extends Thread {
 			tempRenderTime = System.currentTimeMillis();
 			render(interpol);
 			renderTime = System.currentTimeMillis() - tempRenderTime;
+//			Profiler.lap("Draw");
 		}
 		
 	}
@@ -73,13 +76,17 @@ public class MainThread extends Thread {
 		try {
 			g = (Graphics2D)bs.getDrawGraphics();
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+//			Profiler.lapRestart("Obtain Graphics");
 			draw(g,interpol);
+//			Profiler.lapRestart("Draw Content");
 			if (!bs.contentsLost())
 				bs.show();
+//			Profiler.lapRestart("Show Content");
 //			g.dispose();
 		} finally {
 			if (g != null)
 				g.dispose();
+//			Profiler.lapRestart("Dispose Graphics");
 		}
 	}
 	

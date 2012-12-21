@@ -8,13 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import caskman.polygonsim.Profiler;
 import caskman.polygonsim.model.entities.Dot;
 import caskman.polygonsim.model.entities.DynamicPolygon;
 import caskman.polygonsim.model.entities.Explosion;
 import caskman.polygonsim.model.entities.Mob;
 import caskman.polygonsim.screens.InputEvent;
-import caskman.polygonsim.screens.ScreenManager;
 import caskman.polygonsim.screens.OptionsScreen;
+import caskman.polygonsim.screens.ScreenManager;
 
 
 public class GameModel {
@@ -366,22 +367,29 @@ public class GameModel {
 	public void draw(Graphics2D g,float interpol) {
 		if (isPaused)
 			interpol = 0F;
+		Profiler.start();
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, screenDims.width, screenDims.height);
+		Profiler.lapRestart("Draw Black Background");
 		Vector offset = calcMapScreenOffset(interpol);
+		Profiler.lapRestart("Calc Offset");
 		for (Mob m : dots) {
 			if (isWithinScreen(m))
 				m.drawMob(g,interpol,offset);
 		}
+		Profiler.lapRestart("Draw Dots");
 		for (Mob m : polygons) {
 			if (isWithinScreen(m))
 				m.drawMob(g,interpol,offset);
 		}
+		Profiler.lapRestart("Draw Polygons");
 		for (Mob m : explosions) {
 			if (isWithinScreen(m))
 				m.drawMob(g,interpol,offset);
 		}
+		Profiler.lapRestart("Draw Explosions");
 		drawMouseInput(g,interpol);
+		Profiler.lapRestart("Draw Mouse Input");
 //		q.draw(g);
 	}
 	

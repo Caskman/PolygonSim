@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.List;
 
+import caskman.polygonsim.Profiler;
 import caskman.polygonsim.model.Vector;
 
 public class ButtonItem extends Item {
@@ -20,6 +21,7 @@ public class ButtonItem extends Item {
 		Vector textPosition;
 		boolean isPressed;
 		private int textStyle;
+		boolean isTextDetermined;
 		
 		public ButtonItem() {
 			listeners = new LinkedList<ButtonItemListener>();
@@ -28,6 +30,7 @@ public class ButtonItem extends Item {
 			textSize = 12;
 			isPressed = false;
 			textStyle = Font.BOLD;
+			isTextDetermined = false;
 		}
 		
 		public void setText(String s) {
@@ -51,18 +54,26 @@ public class ButtonItem extends Item {
 		public void draw(Graphics2D g,float interpol) {
 //			if (position == null)
 //				updateDimsandPositions();
+			//Profiler.start();
 			g.setColor(Color.WHITE);
 			g.setFont(getFont());
-			updateTextPosition(g.getFontMetrics());
+			if (!isTextDetermined) {
+				updateTextPosition(g.getFontMetrics());
+				isTextDetermined = true;
+			}
+			//Profiler.lapRestart("Intialize");
 			
 			g.setColor((isPressed)?Color.WHITE:Color.BLACK);
 			g.fillRect((int)position.x, (int)position.y, dims.width, dims.height);
+			//Profiler.lapRestart("Draw Fill");
 			
 			g.setColor(Color.WHITE);
 			g.drawRect((int)position.x, (int)position.y, dims.width, dims.height);
+			//Profiler.lapRestart("Draw Border");
 			
 			g.setColor((isPressed)?Color.BLACK:Color.WHITE);
 			g.drawString(text,textPosition.x,textPosition.y);
+			//Profiler.lapRestart("Draw String");
 		}
 		
 		@Override

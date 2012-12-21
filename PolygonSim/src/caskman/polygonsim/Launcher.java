@@ -86,6 +86,7 @@ public class Launcher {
 	}
 
 	public static void exit() {
+		Profiler.close();
 		System.exit(0);
 	}
 	

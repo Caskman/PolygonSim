@@ -25,15 +25,15 @@ public class Profiler {
 	}
 
 	public static void start() {
+		timer = System.nanoTime();
 		if (!initialized)
 			return;
-		timer = System.currentTimeMillis();
 	}
 
 	public static void lap(String name) {
+		long end = System.nanoTime();
 		if (!initialized)
 			return;
-		long end = System.currentTimeMillis();
 		int index = names.indexOf(name);
 		if (index < 0) {
 			index = names.size();
@@ -50,9 +50,9 @@ public class Profiler {
 	}
 
 	public static void lapRestart(String name) {
+		long end = System.nanoTime();
 		if (!initialized)
 			return;
-		long end = System.currentTimeMillis();
 		int index = names.indexOf(name);
 		if (index < 0) {
 			index = names.size();
@@ -66,7 +66,7 @@ public class Profiler {
 		if (sums.get(index) < before)
 			throw new IndexOutOfBoundsException();// overflow
 		counts.set(index,counts.get(index) + 1);
-		timer = System.currentTimeMillis();
+		timer = System.nanoTime();
 	}
 
 	public static void close() {

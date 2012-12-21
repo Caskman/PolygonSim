@@ -72,8 +72,9 @@ public class ScreenManager {
 //		int i = 0;
 		for (GameScreen s : screens) {
 			if (s.state != ScreenState.HIDDEN) {
+//				Profiler.start();
 				s.drawScreen(g,interpol);
-//				Profiler.lapRestart("Draw Screen "+(i+1));
+//				Profiler.lap("Draw Screen "+(i+1));
 			}
 //			i++;
 		}

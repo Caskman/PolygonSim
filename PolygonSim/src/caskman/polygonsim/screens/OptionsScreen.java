@@ -4,17 +4,15 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import caskman.polygonsim.Launcher;
 import caskman.polygonsim.Parameters;
+import caskman.polygonsim.Profiler;
 import caskman.polygonsim.model.GameModel;
 import caskman.polygonsim.model.Vector;
 import caskman.polygonsim.screens.ButtonItem.ButtonItemListener;
@@ -144,21 +142,26 @@ public class OptionsScreen extends GameScreen {
 
 	@Override
 	public void drawScreen(Graphics2D g, float interpol) {
+		//Profiler.start();
 		Composite old = g.getComposite();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5F));
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
 		g.setComposite(old);
+		//Profiler.lapRestart("Fade Background");
 		
 		Rectangle r = new Rectangle(manager.getScreenDims().width/8, manager.getScreenDims().height/8, 3*manager.getScreenDims().width/4, 3*manager.getScreenDims().height/4);
 		g.setColor(Color.BLACK);
 		g.fillRect(r.x,r.y,r.width,r.height);
+		//Profiler.lapRestart("Draw Dark Background");
 		g.setColor(Color.WHITE);
 		g.drawRect(r.x,r.y,r.width,r.height);
+		//Profiler.lapRestart("Draw Border");
 		
 		for (Item i : optionItems) {
 			i.draw(g,interpol);
 		}
+		//Profiler.lapRestart("Draw Items");
 	}
 
 	@Override

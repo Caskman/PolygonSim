@@ -100,5 +100,11 @@ public class SelectionScreen extends GameScreen {
 	public interface SelectionAction {
 		public void selectionMade(int i);
 	}
+
+
+	@Override
+	public boolean isFullscreen() {
+		return false;
+	}
 	
 }

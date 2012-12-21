@@ -28,4 +28,12 @@ public class MainGameScreen extends GameScreen {
 		model.manageInput(e);
 	}
 
+
+	@Override
+	public boolean isFullscreen() {
+		return true;
+	}
+
 }
+
+

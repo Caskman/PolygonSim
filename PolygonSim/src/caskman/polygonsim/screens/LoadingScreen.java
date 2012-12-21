@@ -53,4 +53,12 @@ public class LoadingScreen extends GameScreen {
 	}
 
 
+	@Override
+	public boolean isFullscreen() {
+		return true;
+	}
+
+
+	
+	
 }

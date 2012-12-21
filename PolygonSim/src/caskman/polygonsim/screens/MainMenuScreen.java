@@ -84,5 +84,11 @@ public class MainMenuScreen extends GameScreen {
 		}
 	}
 
+
+	@Override
+	public boolean isFullscreen() {
+		return true;
+	}
+
 	
 }

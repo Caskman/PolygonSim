@@ -143,19 +143,24 @@ public class OptionsScreen extends GameScreen {
 	@Override
 	public void drawScreen(Graphics2D g, float interpol) {
 		//Profiler.start();
-		Composite old = g.getComposite();
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5F));
+//		Composite old = g.getComposite();
+//		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5F));
+//		g.setColor(Color.BLACK);
+//		g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
+//		g.setComposite(old);
+		//Profiler.lapRestart("Fade Background");
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
-		g.setComposite(old);
-		//Profiler.lapRestart("Fade Background");
+		
+//		g.setColor(Color.WHITE);
+//		g.drawRect(0, 0, manager.getScreenDims().width-1, manager.getScreenDims().height-1);
 		
 		Rectangle r = new Rectangle(manager.getScreenDims().width/8, manager.getScreenDims().height/8, 3*manager.getScreenDims().width/4, 3*manager.getScreenDims().height/4);
 		g.setColor(Color.BLACK);
 		g.fillRect(r.x,r.y,r.width,r.height);
 		//Profiler.lapRestart("Draw Dark Background");
-		g.setColor(Color.WHITE);
-		g.drawRect(r.x,r.y,r.width,r.height);
+//		g.setColor(Color.WHITE);
+//		g.drawRect(r.x,r.y,r.width,r.height);
 		//Profiler.lapRestart("Draw Border");
 		
 		for (Item i : optionItems) {
@@ -176,6 +181,12 @@ public class OptionsScreen extends GameScreen {
 		for (Item i : optionItems) {
 			i.manageInput(e);
 		}
+	}
+
+
+	@Override
+	public boolean isFullscreen() {
+		return true;
 	}
 	
 	

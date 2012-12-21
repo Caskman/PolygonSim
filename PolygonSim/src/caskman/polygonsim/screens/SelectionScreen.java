@@ -6,13 +6,14 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 import caskman.polygonsim.model.Vector;
-import caskman.polygonsim.screens.OptionItem.OptionItemListener;
+import caskman.polygonsim.screens.ButtonItem.ButtonItemListener;
 
 public class SelectionScreen extends GameScreen {
 	
 	private SelectionAction sa;
 	private StackPanel panel;
 	private String[] choices;
+	private ButtonItem cancelButton;
 	
 	public SelectionScreen(ScreenManager manager, boolean isFullscreen,String[] choices,SelectionAction sa) {
 		super(manager, isFullscreen);
@@ -30,12 +31,25 @@ public class SelectionScreen extends GameScreen {
 		panel.setOrientation(StackPanel.HORIZONTAL);
 		
 		for (int k = 0; k < choices.length; k++) {
-			OptionItem i = new OptionItem();
+			ButtonItem i = new ButtonItem();
 			i.setText(choices[k]);
-			i.setDims(new Dimension(200,50));
+			i.setDims(new Dimension(100,50));
+			i.setTextSize(20);
 			i.addOptionItemListener(new SelectionListener(k));
 			panel.add(i);
 		}
+		
+		cancelButton = new ButtonItem();
+		cancelButton.setText("Cancel");
+		cancelButton.setTextSize(20);
+		cancelButton.setDims(new Dimension(150,30));
+		cancelButton.setPosition(new Vector((manager.getScreenDims().width - cancelButton.getDims().width)/2,5*manager.getScreenDims().height/8));
+		cancelButton.addOptionItemListener(new ButtonItemListener() {
+			@Override
+			public void itemActivated() {
+				exitScreen();
+			}
+		});
 	}
 	
 	private void selectionMade(int i) {
@@ -55,6 +69,7 @@ public class SelectionScreen extends GameScreen {
 		g.setColor(Color.WHITE);
 		g.drawRect((int)panel.getPosition().x, (int)panel.getPosition().y, panel.getDims().width, panel.getDims().height);
 		panel.draw(g,interpol);
+		cancelButton.draw(g, interpol);
 	}
 
 	@Override
@@ -62,11 +77,13 @@ public class SelectionScreen extends GameScreen {
 		if (e.isKeyInput()) {
 			if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 				exitScreen();
-		} else
+		} else {
 			panel.manageInput(e);
+			cancelButton.manageInput(e);
+		}
 	}
 
-	private class SelectionListener implements OptionItemListener {
+	private class SelectionListener implements ButtonItemListener {
 		
 		int selectionNumber;
 		

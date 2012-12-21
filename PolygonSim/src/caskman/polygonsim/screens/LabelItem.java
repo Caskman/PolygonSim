@@ -10,17 +10,15 @@ import java.util.List;
 
 import caskman.polygonsim.model.Vector;
 
-public class OptionItem extends Item {
+public class LabelItem extends Item {
 		
 		private String text;
 		private int textSize;
-		private List<OptionItemListener> listeners;
 		private Dimension dims;
 		Vector position;
 		Vector textPosition;
 		
-		public OptionItem() {
-			listeners = new LinkedList<OptionItemListener>();
+		public LabelItem() {
 			position = textPosition = null;
 			dims = null;
 			textSize = 12;
@@ -34,9 +32,6 @@ public class OptionItem extends Item {
 			textSize = size;
 		}
 		
-		public void addOptionItemListener(OptionItemListener l) {
-			listeners.add(l);
-		}
 		
 		private void updateTextPosition(FontMetrics m) {
 			Dimension textDims = new Dimension(m.stringWidth(text),m.getHeight());
@@ -57,22 +52,9 @@ public class OptionItem extends Item {
 		
 		@Override
 		public void manageInput(InputEvent e) {
-			if (dims == null)
-				return;
-			if (e.isMouseInput()) {
-				if (e.getType() != InputEvent.MOUSE_PRESSED)
-					return;
-			} else return;
-			Vector v = e.getVector();
-			if (v.x > position.x && v.x < (position.x+dims.width) && v.y > position.y && v.y < (position.y + dims.height))
-				notifyListeners();
+			
 		}
 			
-		private void notifyListeners() {
-			for (OptionItemListener l : listeners) {
-				l.itemActivated();
-			}
-		}
 		
 		private Font getFont() {
 			return new Font(Font.SANS_SERIF,Font.PLAIN,textSize);

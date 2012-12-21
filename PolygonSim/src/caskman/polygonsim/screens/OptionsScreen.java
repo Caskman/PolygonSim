@@ -2,6 +2,7 @@ package caskman.polygonsim.screens;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -16,7 +17,7 @@ import caskman.polygonsim.Launcher;
 import caskman.polygonsim.Parameters;
 import caskman.polygonsim.model.GameModel;
 import caskman.polygonsim.model.Vector;
-import caskman.polygonsim.screens.OptionItem.OptionItemListener;
+import caskman.polygonsim.screens.ButtonItem.ButtonItemListener;
 import caskman.polygonsim.screens.SelectionScreen.SelectionAction;
 
 public class OptionsScreen extends GameScreen {
@@ -33,7 +34,7 @@ public class OptionsScreen extends GameScreen {
 	
 	private void initialize() {
 		optionItems = new ArrayList<Item>();
-		OptionItem i;
+		ButtonItem i;
 		StackPanel sp = new StackPanel();
 		Dimension stackDims = new Dimension(manager.getScreenDims().width/8,3*manager.getScreenDims().height/8);
 		sp.setDims(stackDims);
@@ -42,21 +43,23 @@ public class OptionsScreen extends GameScreen {
 		optionItems.add(sp);
 		
 		
-		i = new OptionItem();
-		i.setText("Options");
-		i.setTextSize(40);
-		i.setDims(new Dimension(200,50));
-		i.setPosition(new Vector((manager.getScreenDims().width - i.getDims().width)/2,manager.getScreenDims().height/4));
-		optionItems.add(i);
+		LabelItem l = new LabelItem();
+		l.setText("Options");
+		l.setTextSize(40);
+		l.setDims(new Dimension(200,50));
+		l.setPosition(new Vector((manager.getScreenDims().width - l.getDims().width)/2,manager.getScreenDims().height/4));
+		optionItems.add(l);
 		
-		i = new OptionItem();
+		i = new ButtonItem();
 		i.setText("Change Window Mode");
-		i.setDims(new Dimension(150,20));
+		i.setTextSize(20);
+		i.setDims(new Dimension(275,30));
 		sp.add(i);
 		
-		i = new OptionItem();
+		i = new ButtonItem();
+		i.setTextSize(20);
 		i.setText("Change Dot Color");
-		i.addOptionItemListener(new OptionItemListener() {
+		i.addOptionItemListener(new ButtonItemListener() {
 			@Override
 			public void itemActivated() {
 				manager.addScreen(new SelectionScreen(manager,false,Parameters.getDotColorChoices(),new SelectionAction() {
@@ -72,12 +75,13 @@ public class OptionsScreen extends GameScreen {
 				}));
 			}
 		});
-		i.setDims(new Dimension(150,20));
+		i.setDims(new Dimension(275,30));
 		sp.add(i);
 		
-		i = new OptionItem();
+		i = new ButtonItem();
+		i.setTextSize(20);
 		i.setText("Change Line Color");
-		i.addOptionItemListener(new OptionItemListener() {
+		i.addOptionItemListener(new ButtonItemListener() {
 			@Override
 			public void itemActivated() {
 				manager.addScreen(new SelectionScreen(manager,false,Parameters.getLineColorChoices(),new SelectionAction() {
@@ -93,12 +97,13 @@ public class OptionsScreen extends GameScreen {
 				}));
 			}
 		});
-		i.setDims(new Dimension(150,20));
+		i.setDims(new Dimension(275,30));
 		sp.add(i);
 		
-		i = new OptionItem();
+		i = new ButtonItem();
 		i.setText("Change Background Color");
-		i.addOptionItemListener(new OptionItemListener() {
+		i.setTextSize(20);
+		i.addOptionItemListener(new ButtonItemListener() {
 			@Override
 			public void itemActivated() {
 				manager.addScreen(new SelectionScreen(manager,false,Parameters.getBackgroundColorChoices(),new SelectionAction() {
@@ -114,14 +119,14 @@ public class OptionsScreen extends GameScreen {
 				}));
 			}
 		});
-		i.setDims(new Dimension(150,20));
+		i.setDims(new Dimension(275,30));
 		sp.add(i);
 		
-		i = new OptionItem();
+		i = new ButtonItem();
 		i.setText("Exit");
 		i.setDims(new Dimension(100,20));
 		i.setTextSize(20);
-		i.addOptionItemListener(new OptionItemListener() {
+		i.addOptionItemListener(new ButtonItemListener() {
 			@Override
 			public void itemActivated() {
 				Launcher.exit();
@@ -139,10 +144,11 @@ public class OptionsScreen extends GameScreen {
 
 	@Override
 	public void drawScreen(Graphics2D g, float interpol) {
+		Composite old = g.getComposite();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5F));
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
-		g.setComposite(AlphaComposite.SrcOver);
+		g.setComposite(old);
 		
 		Rectangle r = new Rectangle(manager.getScreenDims().width/8, manager.getScreenDims().height/8, 3*manager.getScreenDims().width/4, 3*manager.getScreenDims().height/4);
 		g.setColor(Color.BLACK);

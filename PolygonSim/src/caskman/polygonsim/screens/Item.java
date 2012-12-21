@@ -19,4 +19,7 @@ public abstract class Item {
 	
 	public abstract Dimension getDims();
 	
+	public abstract Vector getPosition();
+	
+	
 }

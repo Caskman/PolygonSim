@@ -86,4 +86,10 @@ public class StackPanel extends Item {
 		return dims;
 	}
 
+
+	@Override
+	public Vector getPosition() {
+		return position;
+	}
+
 }

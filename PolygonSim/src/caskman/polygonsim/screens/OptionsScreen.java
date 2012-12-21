@@ -13,8 +13,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import caskman.polygonsim.Launcher;
+import caskman.polygonsim.Parameters;
 import caskman.polygonsim.model.GameModel;
 import caskman.polygonsim.model.Vector;
+import caskman.polygonsim.screens.OptionItem.OptionItemListener;
+import caskman.polygonsim.screens.SelectionScreen.SelectionAction;
 
 public class OptionsScreen extends GameScreen {
 	
@@ -53,16 +56,61 @@ public class OptionsScreen extends GameScreen {
 		
 		i = new OptionItem();
 		i.setText("Change Dot Color");
+		i.addOptionItemListener(new OptionItemListener() {
+			@Override
+			public void itemActivated() {
+				manager.addScreen(new SelectionScreen(manager,false,Parameters.getDotColorChoices(),new SelectionAction() {
+					@Override
+					public void selectionMade(int selection) {
+						try {
+							Parameters.DOT_COLOR = Parameters.string2Color(Parameters.getDotColorChoices()[selection]);
+						} catch (Exception e) {
+							
+						}
+					}
+				}));
+			}
+		});
 		i.setDims(new Dimension(150,20));
 		sp.add(i);
 		
 		i = new OptionItem();
 		i.setText("Change Line Color");
+		i.addOptionItemListener(new OptionItemListener() {
+			@Override
+			public void itemActivated() {
+				manager.addScreen(new SelectionScreen(manager,false,Parameters.getLineColorChoices(),new SelectionAction() {
+					@Override
+					public void selectionMade(int selection) {
+						try {
+						Parameters.LINE_COLOR = Parameters.string2Color(Parameters.getLineColorChoices()[selection]);
+						} catch (Exception e) {
+							
+						}
+					}
+				}));
+			}
+		});
 		i.setDims(new Dimension(150,20));
 		sp.add(i);
 		
 		i = new OptionItem();
 		i.setText("Change Background Color");
+		i.addOptionItemListener(new OptionItemListener() {
+			@Override
+			public void itemActivated() {
+				manager.addScreen(new SelectionScreen(manager,false,Parameters.getBackgroundColorChoices(),new SelectionAction() {
+					@Override
+					public void selectionMade(int selection) {
+						try {
+							Parameters.LINE_COLOR = Parameters.string2Color(Parameters.getBackgroundColorChoices()[selection]);
+						} catch (Exception e) {
+							
+						}
+					}
+				}));
+			}
+		});
 		i.setDims(new Dimension(150,20));
 		sp.add(i);
 		
@@ -118,116 +166,6 @@ public class OptionsScreen extends GameScreen {
 		}
 	}
 	
-	private class OptionItem extends Item {
-		
-		private String text;
-		private int textSize;
-//		private Vector centerPosition;
-		private List<OptionItemListener> listeners;
-		private Dimension dims;
-		Vector position;
-		Vector textPosition;
-		
-		public OptionItem() {
-			listeners = new LinkedList<OptionItemListener>();
-			position = textPosition = null;
-			dims = null;
-			textSize = 12;
-		}
-		
-		public void setText(String s) {
-			text = s;
-		}
-		
-		public void setTextSize(int size) {
-			textSize = size;
-		}
-		
-//		@Override
-//		public void setCenterPosition(Vector v) {
-//			centerPosition = v;
-//		}
-		
-		public void addOptionItemListener(OptionItemListener l) {
-			listeners.add(l);
-		}
-		
-//		@Override
-//		public void updateDimsandPositions() {
-//			FontMetrics m = new MyFontMetrics(getFont());
-//			int padding = 4;
-//			dims = new Dimension(m.stringWidth(text) + padding,m.getAscent() + padding);
-//			position = new Vector(centerPosition.x - dims.width/2,centerPosition.y - dims.height/2);
-//			textPosition = new Vector(position.x + padding/2,centerPosition.y + m.getDescent() + m.getLeading() + padding/2);
-//		}
-		
-		private void updateTextPosition(FontMetrics m) {
-			Dimension textDims = new Dimension(m.stringWidth(text),m.getHeight());
-			textPosition = new Vector(position.x + (dims.width - textDims.width)/2,position.y + (dims.height - textDims.height)/2 + m.getAscent());
-		}
-		
-		@Override
-		public void draw(Graphics2D g,float interpol) {
-//			if (position == null)
-//				updateDimsandPositions();
-			g.setColor(Color.WHITE);
-			g.setFont(getFont());
-			updateTextPosition(g.getFontMetrics());
-			
-//			g.drawRect((int)position.x, (int)position.y, dims.width, dims.height);
-			g.drawString(text,textPosition.x,textPosition.y);
-		}
-		
-		@Override
-		public void manageInput(InputEvent e) {
-			if (dims == null)
-				return;
-			if (e.isMouseInput()) {
-				if (e.getType() != InputEvent.MOUSE_PRESSED)
-					return;
-			} else return;
-			Vector v = e.getVector();
-			if (v.x > position.x && v.x < (position.x+dims.width) && v.y > position.y && v.y < (position.y + dims.height))
-				notifyListeners();
-		}
-			
-		private void notifyListeners() {
-			for (OptionItemListener l : listeners) {
-				l.itemActivated();
-			}
-		}
-		
-		private Font getFont() {
-			return new Font(Font.SANS_SERIF,Font.PLAIN,textSize);
-		}
-		
-		private class MyFontMetrics extends FontMetrics {
-
-			public MyFontMetrics(Font f) {
-				super(f);
-			}
-			
-		}
-
-
-		@Override
-		public void setPosition(Vector v) {
-			position = v;
-		}
-
-		@Override
-		public void setDims(Dimension d) {
-			dims = d;
-		}
-
-		@Override
-		public Dimension getDims() {
-			return dims;
-		}
-	}
 	
-	private interface OptionItemListener {
-		public void itemActivated();
-	}
 
 }

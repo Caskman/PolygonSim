@@ -20,6 +20,7 @@ public class Parameters {
 	private static String gameDir = homeDir + "PolygonSim" + File.separator;
 	private static String parameterDir = gameDir + "params" + File.separator;
 	private static String parameterFilePath = parameterDir + "params.txt";
+	public static final String[] dotColorChoices = {};
 
 
 	public static void load() {
@@ -96,13 +97,13 @@ public class Parameters {
 			out.write(WINDOWED+"");
 			break;
 		case DOT_COLOR:
-			out.write(DOT_COLOR + "");
+			out.write(color2String(DOT_COLOR));
 			break;
 		case LINE_COLOR:
-			out.write(LINE_COLOR + "");
+			out.write(color2String(LINE_COLOR));
 			break;
 		case BACKGROUND_COLOR:
-			out.write(BACKGROUND_COLOR + "");
+			out.write(color2String(BACKGROUND_COLOR));
 			break;
 			default: throw new Exception();
 		}
@@ -149,27 +150,67 @@ public class Parameters {
 		return true;
 	}
 	
-	private static Color string2Color(String s) throws Exception {
-		if (s.compareTo(Color.RED.toString()) == 0)
+	private static ColorCode string2ColorCode(String s) throws Exception {
+		ColorCode[] values = ColorCode.values();
+		for (ColorCode c : values) {
+			if (s.compareTo(c.toString()) == 0)
+				return c;
+		}
+		throw new Exception();
+	}
+	
+	private static ColorCode color2ColorCode(Color c) throws Exception {
+		if (c == Color.RED)
+			return ColorCode.Red;
+		else if (c == Color.BLUE)
+			return ColorCode.Blue;
+		else if (c == Color.GREEN)
+			return ColorCode.Green;
+		else if (c == Color.ORANGE)
+			return ColorCode.Orange;
+		else if (c == Color.YELLOW)
+			return ColorCode.Yellow;
+		else if (c == Color.CYAN)
+			return ColorCode.Cyan;
+		else if (c == Color.GRAY)
+			return ColorCode.Gray;
+		else if (c == Color.MAGENTA)
+			return ColorCode.Magenta;
+		else if (c == Color.PINK)
+			return ColorCode.Pink;
+		else if (c == Color.WHITE)
+			return ColorCode.White;
+		throw new Exception();
+	}
+	
+	private static String color2String(Color c) throws Exception {
+		return color2ColorCode(c).toString();
+	}
+	
+	public static Color string2Color(String s) throws Exception {
+		ColorCode code = string2ColorCode(s);
+		switch (code) {
+		case Red:
 			return Color.RED;
-		else if (s.compareTo(Color.BLUE.toString()) == 0)
+		case Blue:
 			return Color.BLUE;
-		else if (s.compareTo(Color.GREEN.toString()) == 0)
+		case Green:
 			return Color.GREEN;
-		else if (s.compareTo(Color.ORANGE.toString()) == 0)
+		case Orange:
 			return Color.ORANGE;
-		else if (s.compareTo(Color.YELLOW.toString()) == 0)
+		case Yellow:
 			return Color.YELLOW;
-		else if (s.compareTo(Color.CYAN.toString()) == 0)
+		case Cyan:
 			return Color.CYAN;
-		else if (s.compareTo(Color.GRAY.toString()) == 0)
+		case Gray:
 			return Color.GRAY;
-		else if (s.compareTo(Color.MAGENTA.toString()) == 0)
+		case Magenta:
 			return Color.MAGENTA;
-		else if (s.compareTo(Color.PINK.toString()) == 0)
+		case Pink:
 			return Color.PINK;
-		else if (s.compareTo(Color.WHITE.toString()) == 0)
+		case White:
 			return Color.WHITE;
+		}
 		throw new Exception();
 	}
 	
@@ -190,7 +231,34 @@ public class Parameters {
 		return ParameterCode.NO_CODE;
 	}
 	
+	public static String[] getDotColorChoices() {
+		return getColorCodeChoices();
+	}
+	
+	private static String[] getColorCodeChoices() {
+		ColorCode[] codes = ColorCode.values();
+		String[] choices = new String[codes.length];
+		for (int i = 0; i < codes.length; i++) {
+			choices[i]= codes[i].toString();
+		}
+		return choices;
+
+	}
+	
+	public static String[] getLineColorChoices() {
+		return getColorCodeChoices();
+	}
+	
+	public static String[] getBackgroundColorChoices() {
+		return getColorCodeChoices();
+	}
+	
 	private enum ParameterCode {
 		WINDOWED,DOT_COLOR,LINE_COLOR,BACKGROUND_COLOR,NO_CODE
 	}
+	
+	private enum ColorCode {
+		Red,Blue,Green,Orange,Yellow,Cyan,Gray,Magenta,Pink,White
+	}
+	
 }

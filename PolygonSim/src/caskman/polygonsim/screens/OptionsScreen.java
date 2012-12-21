@@ -8,17 +8,18 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import caskman.polygonsim.Launcher;
 import caskman.polygonsim.model.GameModel;
 import caskman.polygonsim.model.Vector;
-import caskman.polygonsim.Launcher;
 
 public class OptionsScreen extends GameScreen {
 	
 	private GameModel model;
-	private OptionItem[] optionItems;
+	private List<Item> optionItems;
 
 	public OptionsScreen(ScreenManager manager, boolean isFullscreen,GameModel gameModel) {
 		super(manager, isFullscreen);
@@ -28,26 +29,34 @@ public class OptionsScreen extends GameScreen {
 	}
 	
 	private void initialize() {
-		optionItems = new OptionItem[2];
+		optionItems = new ArrayList<Item>();
 		OptionItem i;
+		StackPanel sp = new StackPanel();
+		Dimension stackDims = new Dimension(manager.getScreenDims().width/8,5*manager.getScreenDims().height/8);
+		sp.setDims(stackDims);
+		sp.setLocation(new Vector((manager.getScreenDims().width - stackDims.width)/2,3*manager.getScreenDims().height/8));
+		
 		
 		i = new OptionItem();
 		i.setText("Options");
 		i.setTextSize(40);
 		i.setCenterPosition(new Vector(manager.getScreenDims().width/2,manager.getScreenDims().height/4));
-		optionItems[0] = i;
+		optionItems.add(i);
+		
+		
+		
 		
 		i = new OptionItem();
 		i.setText("Exit");
 		i.setTextSize(20);
-		i.setCenterPosition(new Vector(manager.getScreenDims().width/2,3*manager.getScreenDims().height/4));
+//		i.setCenterPosition(new Vector(manager.getScreenDims().width/2,3*manager.getScreenDims().height/4));
 		i.addOptionItemListener(new OptionItemListener() {
 			@Override
 			public void itemActivated() {
 				Launcher.exit();
 			}
 		});
-		optionItems[1] = i;
+		sp.add(i);
 		
 		
 	}

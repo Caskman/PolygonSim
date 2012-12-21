@@ -166,7 +166,7 @@ public class Parameters {
 			return ColorCode.Blue;
 		else if (c == Color.GREEN)
 			return ColorCode.Green;
-		else if (c == Color.ORANGE)
+		else if ((c.getRGB()&0xffffff) == 0xff4800)
 			return ColorCode.Orange;
 		else if (c == Color.YELLOW)
 			return ColorCode.Yellow;
@@ -197,7 +197,7 @@ public class Parameters {
 		case Green:
 			return Color.GREEN;
 		case Orange:
-			return Color.ORANGE;
+			return new Color(0xff4800);
 		case Yellow:
 			return Color.YELLOW;
 		case Cyan:

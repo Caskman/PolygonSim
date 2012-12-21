@@ -64,6 +64,7 @@ public class OptionsScreen extends GameScreen {
 					public void selectionMade(int selection) {
 						try {
 							Parameters.DOT_COLOR = Parameters.string2Color(Parameters.getDotColorChoices()[selection]);
+							Parameters.save();
 						} catch (Exception e) {
 							
 						}
@@ -83,7 +84,8 @@ public class OptionsScreen extends GameScreen {
 					@Override
 					public void selectionMade(int selection) {
 						try {
-						Parameters.LINE_COLOR = Parameters.string2Color(Parameters.getLineColorChoices()[selection]);
+							Parameters.LINE_COLOR = Parameters.string2Color(Parameters.getLineColorChoices()[selection]);
+							Parameters.save();
 						} catch (Exception e) {
 							
 						}
@@ -104,6 +106,7 @@ public class OptionsScreen extends GameScreen {
 					public void selectionMade(int selection) {
 						try {
 							Parameters.LINE_COLOR = Parameters.string2Color(Parameters.getBackgroundColorChoices()[selection]);
+							Parameters.save();
 						} catch (Exception e) {
 							
 						}

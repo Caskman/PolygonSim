@@ -33,13 +33,14 @@ public class GameModel {
 	private List<Mob> polygons;
 	private QuadTree q;
 	private List<Mob> allPhysicalEntities;
-	private static float SUCTION_RADIUS = 200F;
+	private static float GRAVITY_RADIUS = 200F;
 	private static float MAX_SUCTION_ACCEL = 50F;
 	private static float FRICTION_CONSTANT = 20F;
 	private static int MAP_MOVEMENT_SPEED = 15;
 	private static int BACKGROUND_SPACING = 100;
 	private static float BACKGROUND_OPACITY = 1F;
 	private static float BACKGROUND_DEPTH = .6F;
+	private static int NUM_GRAVITY_LINES = 6;
 	private Vector cameraPosition;
 	private Vector cameraVelocity;
 	private Vector mousePosition;
@@ -50,6 +51,10 @@ public class GameModel {
 	private boolean rightMousePressed;
 	private boolean isPaused;
 	private ScreenManager manager;
+	private float gravityAngle;
+	private float gravityAngleSpeed;
+	private final static float tpi = (float) (2*Math.PI);
+	private Vector previousMousePosition;
 	
 	
 	public GameModel(ScreenManager manager,Dimension screenDims) {
@@ -71,16 +76,19 @@ public class GameModel {
 	}
 	
 	private void initialize() {
+		gravityAngle = 0F;
+		gravityAngleSpeed = tpi/256F;
+		previousMousePosition = new Vector();
 		r = new Random();
 		leftMousePressed = false;
 		mouseWheelPressed = false;
 		rightMousePressed = false;
 		isPaused = false;
 //		int numBlocks = (int) (screenDims.width*screenDims.height*dotRatio);
-		int numBlocks = 1500;
+		int numBlocks = 1000;
 //		System.out.println(numBlocks);
 		dots = new ArrayList<Mob>(numBlocks);
-		mapDims = new Dimension(4000,4000);
+		mapDims = new Dimension(3000,3000);
 //		lines = new ArrayList<Mob>();
 		
 		for (int i = 0; i < numBlocks; i++) {
@@ -149,7 +157,7 @@ public class GameModel {
 			case InputEvent.MOUSE_MOVED:
 			}
 			
-			
+			previousMousePosition = mousePosition;
 			mousePosition = e.getVector();
 		} else if (e.isKeyInput()) {
 			if (e.getType() == InputEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -165,7 +173,7 @@ public class GameModel {
 	
 	private void processInput() {
 		if (leftMousePressed) {
-			applySuctionField(calcMapPosition(mousePosition));
+			applyGravityField(calcMapPosition(mousePosition));
 		}
 		if (rightMousePressed) {
 			Vector displacement = Vector.displacement(calcMapPosition(mousePosition),rightPressPosition);
@@ -189,11 +197,15 @@ public class GameModel {
 		}
 	}
 	
+	private Vector predictMousePosition(float interpol) {
+		return Vector.add(Vector.scalar(interpol,Vector.subtract(previousMousePosition, mousePosition)),mousePosition);
+	}
+	
 	private Vector calcMapPosition(Vector v) {
 		return Vector.add(v,cameraPosition);
 	}
 	
-	private void applySuctionField(Vector source) {
+	private void applyGravityField(Vector source) {
 		List<Mob> affectedEntities = new ArrayList<Mob>();
 		List<Float> mags = new ArrayList<Float>();
 		List<Vector> disps = new ArrayList<Vector>();
@@ -203,7 +215,7 @@ public class GameModel {
 		for (Mob m : allPhysicalEntities) {
 			disp = Vector.displacement( m.getPosition(),source);
 			mag = Vector.mag(disp);
-			if (mag < SUCTION_RADIUS) {
+			if (mag < GRAVITY_RADIUS) {
 				affectedEntities.add(m);
 				mags.add(mag);
 				disps.add(disp);
@@ -255,6 +267,15 @@ public class GameModel {
 		cameraVelocity = Vector.scalar(.75F,cameraVelocity);
 	}
 	
+	private void updateGravityAnimation() {
+		gravityAngle = gravityAngle + gravityAngleSpeed;
+		if (gravityAngle < 0 && gravityAngle < (0-tpi)) {
+			gravityAngle += tpi;
+		} else if (gravityAngle >= 0 && gravityAngle > tpi) {
+			gravityAngle += (0-tpi);
+		}
+	}
+	
 	public void update() {
 		if (isPaused)
 			return;
@@ -262,6 +283,8 @@ public class GameModel {
 		processInput();
 		
 		updateCamera();
+		
+		updateGravityAnimation();
 		
 		updateQuadTree();
 		
@@ -413,8 +436,34 @@ public class GameModel {
 			if (isWithinScreen(m))
 				m.drawMob(g,interpol,offset);
 		}
+		drawGravityField(g,interpol);
 //		drawMouseInput(g,interpol);
 //		q.draw(g);
+	}
+	
+	private void drawGravityField(Graphics2D g,float interpol) {
+		if (!leftMousePressed)
+			return;
+		Vector drawPosition = mousePosition;
+		
+		g.setColor(Color.WHITE);
+		g.drawArc((int)(drawPosition.x - GRAVITY_RADIUS), (int)(drawPosition.y - GRAVITY_RADIUS), (int)GRAVITY_RADIUS*2, (int)GRAVITY_RADIUS*2, 0, 360);
+		Composite old = g.getComposite();
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,.1F));
+		g.fillArc((int)(drawPosition.x - GRAVITY_RADIUS), (int)(drawPosition.y - GRAVITY_RADIUS), (int)GRAVITY_RADIUS*2, (int)GRAVITY_RADIUS*2, 0, 360);
+		g.setComposite(old);
+//		float interpolGravityAngle = gravityAngle + interpol*gravityAngleSpeed;
+//		Vector[] points = new Vector[NUM_GRAVITY_LINES*2];
+//		
+//		float angleInterval = tpi/points.length;
+//		int i = 0;
+//		for (float point = interpolGravityAngle; i < points.length; point += angleInterval,i++) {
+//			points[i] = new Vector(GRAVITY_RADIUS*(float)Math.cos(point),GRAVITY_RADIUS*(float)Math.sin(point));
+//		}
+//		
+//		for (Vector point : points) {
+//			g.drawLine((int)(point.x + drawPosition.x), (int)(point.y + drawPosition.y),(int) drawPosition.x,(int) drawPosition.y);
+//		}
 	}
 	
 	private boolean isWithinScreen(Mob m) {

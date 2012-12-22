@@ -25,7 +25,7 @@ public class SelectionScreen extends GameScreen {
 	
 	private void initialize(String[] choices) {
 		panel = new StackPanel();
-		Dimension stackDims = new Dimension(7*manager.getScreenDims().width/8,3*manager.getScreenDims().height/8);
+		Dimension stackDims = new Dimension(7*manager.getScreenDims().width/8,5*manager.getScreenDims().height/16);
 		panel.setDims(stackDims);
 		panel.setPosition(new Vector((manager.getScreenDims().width - stackDims.width)/2,(manager.getScreenDims().height - stackDims.height)/2));
 		panel.setOrientation(StackPanel.HORIZONTAL);
@@ -43,7 +43,7 @@ public class SelectionScreen extends GameScreen {
 		cancelButton.setText("Cancel");
 		cancelButton.setTextSize(20);
 		cancelButton.setDims(new Dimension(150,30));
-		cancelButton.setPosition(new Vector((manager.getScreenDims().width - cancelButton.getDims().width)/2,5*manager.getScreenDims().height/8));
+		cancelButton.setPosition(new Vector((manager.getScreenDims().width - cancelButton.getDims().width)/2,9*manager.getScreenDims().height/16));
 		cancelButton.addOptionItemListener(new ButtonItemListener() {
 			@Override
 			public void itemActivated() {

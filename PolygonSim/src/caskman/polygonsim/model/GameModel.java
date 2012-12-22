@@ -367,29 +367,29 @@ public class GameModel {
 	public void draw(Graphics2D g,float interpol) {
 		if (isPaused)
 			interpol = 0F;
-		Profiler.start();
+//		Profiler.start();
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, screenDims.width, screenDims.height);
-		Profiler.lapRestart("Draw Black Background");
+//		Profiler.lapRestart("Draw Black Background");
 		Vector offset = calcMapScreenOffset(interpol);
-		Profiler.lapRestart("Calc Offset");
+//		Profiler.lapRestart("Calc Offset");
 		for (Mob m : dots) {
 			if (isWithinScreen(m))
 				m.drawMob(g,interpol,offset);
 		}
-		Profiler.lapRestart("Draw Dots");
+//		Profiler.lapRestart("Draw Dots");
 		for (Mob m : polygons) {
 			if (isWithinScreen(m))
 				m.drawMob(g,interpol,offset);
 		}
-		Profiler.lapRestart("Draw Polygons");
+//		Profiler.lapRestart("Draw Polygons");
 		for (Mob m : explosions) {
 			if (isWithinScreen(m))
 				m.drawMob(g,interpol,offset);
 		}
-		Profiler.lapRestart("Draw Explosions");
-		drawMouseInput(g,interpol);
-		Profiler.lapRestart("Draw Mouse Input");
+//		Profiler.lapRestart("Draw Explosions");
+//		drawMouseInput(g,interpol);
+//		Profiler.lapRestart("Draw Mouse Input");
 //		q.draw(g);
 	}
 	

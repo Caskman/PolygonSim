@@ -16,16 +16,26 @@ public class MainThread extends Thread {
 	public static int FPS = 25;
 	private int TICKS_PER_FRAME = 1000 / FPS;
 	private int MAX_FRAMESKIP = 5;
+	private int TRAILING_AVG_LIMIT = 50;
 	BufferStrategy bs;
 	ScreenManager manager;
 	private long renderTime;
 	private long tempRenderTime;
 	private long updateTime;
+	private int[] renderTimes;
+	private int[] updateTimes;
+	private int renderTimeCount;
+	private int updateTimeCount;
+	
  
 	public MainThread(BufferStrategy bs,ScreenManager manager) {
 		this.setName("Game Thread");
 		this.bs = bs;
 		this.manager = manager;
+		renderTimes = new int[TRAILING_AVG_LIMIT];
+		updateTimes = new int[TRAILING_AVG_LIMIT];
+		renderTimeCount = 0;
+		updateTimeCount = 0;
 	}
 
 	public void setRunning(boolean running) {
@@ -38,16 +48,13 @@ public class MainThread extends Thread {
 		float interpol;
 		
 		while (running) {
-				
-			
-			
-			
 			framesSkipped = 0;
 //			Profiler.start();
 			while ((System.currentTimeMillis() > nextFrameTicks) && (framesSkipped < MAX_FRAMESKIP)) {
-				updateTime = System.currentTimeMillis();
+				updateTime = System.nanoTime();
 				update();
-				updateTime = System.currentTimeMillis() - updateTime;
+				updateTime = System.nanoTime() - updateTime;
+				addUpdateEntry(updateTime);
 				
 				nextFrameTicks += TICKS_PER_FRAME;
 				
@@ -59,12 +66,42 @@ public class MainThread extends Thread {
 			long num = systemMil + TICKS_PER_FRAME - nextFrameTicks;
 			interpol= ((float)(num))/((float)(TICKS_PER_FRAME));
 			
-			tempRenderTime = System.currentTimeMillis();
+			tempRenderTime = System.nanoTime();
 			render(interpol);
-			renderTime = System.currentTimeMillis() - tempRenderTime;
+			renderTime = System.nanoTime() - tempRenderTime;
+			addRenderEntry(renderTime);
 //			Profiler.lap("Draw");
 		}
+	}
+	
+	private void addRenderEntry(long entry) {
+		renderTimes[renderTimeCount++] = (int)entry;
+		renderTimeCount = renderTimeCount%TRAILING_AVG_LIMIT;
+	}
+	
+	private void addUpdateEntry(long entry) {
+		updateTimes[updateTimeCount++] = (int)entry;
+		updateTimeCount = updateTimeCount%TRAILING_AVG_LIMIT;
+	}
+	
+	private int getRenderTime() {
+		int sum = 0;
+		for (int i : renderTimes) {
+			sum += i;
+		}
 		
+		long avg = sum/renderTimes.length;
+		return (int)(avg/1000000L);
+	}
+	
+	private int getUpdateTime() {
+		int sum = 0;
+		for (int i : updateTimes) {
+			sum += i;
+		}
+		
+		long avg = sum/updateTimes.length;
+		return (int)(avg/1000000L);
 	}
 	
 	private void update() {
@@ -101,8 +138,8 @@ public class MainThread extends Thread {
 //		return "Render: "+(renderTime)+"ms\n Update: "+(updateTime)+"ms\n "+TICKS_PER_FRAME+"ms per frame";
 		g.setColor(Color.WHITE);
 		g.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,10));
-		g.drawString("Render: "+(renderTime)+"ms", 0, 20);
-		g.drawString("Update: "+(updateTime)+"ms", 0, 40);
+		g.drawString("Render: "+(getRenderTime())+"ms", 0, 20);
+		g.drawString("Update: "+(getUpdateTime())+"ms", 0, 40);
 		g.drawString(TICKS_PER_FRAME+"ms per frame", 0, 60);
 	}
 	

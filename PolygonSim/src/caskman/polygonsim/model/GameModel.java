@@ -76,9 +76,11 @@ public class GameModel {
 		mouseWheelPressed = false;
 		rightMousePressed = false;
 		isPaused = false;
-		int numBlocks = (int) (screenDims.width*screenDims.height*dotRatio);
+//		int numBlocks = (int) (screenDims.width*screenDims.height*dotRatio);
+		int numBlocks = 1500;
+//		System.out.println(numBlocks);
 		dots = new ArrayList<Mob>(numBlocks);
-		mapDims = new Dimension(2000,2000);
+		mapDims = new Dimension(4000,4000);
 //		lines = new ArrayList<Mob>();
 		
 		for (int i = 0; i < numBlocks; i++) {
@@ -102,7 +104,7 @@ public class GameModel {
 		polygons = new ArrayList<Mob>();
 		updatePhysicalEntityList();
 		q = new QuadTree(mapDims,5);
-		cameraPosition = new Vector();
+		cameraPosition = new Vector((mapDims.width - screenDims.width)/2,(mapDims.height - screenDims.height)/2);
 		cameraVelocity = new Vector();
 	}
 	

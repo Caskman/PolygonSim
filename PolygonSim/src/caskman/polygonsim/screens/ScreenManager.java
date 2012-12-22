@@ -141,15 +141,15 @@ public class ScreenManager {
 		}
 		@Override
 		public void keyPressed(KeyEvent e) {
-			inputQueue.offer(new InputEvent(InputEvent.KEY_PRESSED,e.getKeyCode()));
+			inputQueue.offer(new InputEvent(InputEvent.KEY_PRESSED,e.getKeyCode(),e.getKeyChar()));
 		}
 		@Override
 		public void keyReleased(KeyEvent e) {
-			inputQueue.offer(new InputEvent(InputEvent.KEY_RELEASED,e.getKeyCode()));
+			inputQueue.offer(new InputEvent(InputEvent.KEY_RELEASED,e.getKeyCode(),e.getKeyChar()));
 		}
 		@Override
 		public void keyTyped(KeyEvent e) {
-			inputQueue.offer(new InputEvent(InputEvent.KEY_TYPED,e.getKeyCode()));
+			inputQueue.offer(new InputEvent(InputEvent.KEY_TYPED,e.getKeyCode(),e.getKeyChar()));
 		}
 	}
 	

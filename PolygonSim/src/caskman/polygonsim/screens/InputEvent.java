@@ -21,10 +21,12 @@ public class InputEvent {
 	private Vector v;
 	private int button;
 	private int keycode;
+	private char keyChar;
 
-	public InputEvent(int type,int keycode) {
+	public InputEvent(int type,int keycode,char keyChar) {
 		this.type = type;
 		this.keycode = keycode;
+		this.keyChar = keyChar;
 	}
 	
 	public InputEvent(Vector v,int type,int button) {
@@ -49,6 +51,10 @@ public class InputEvent {
 		return button;
 	}
 
+	public char getKeyChar() {
+		return keyChar;
+	}
+	
 	public int getKeyCode() {
 		return keycode;
 	}

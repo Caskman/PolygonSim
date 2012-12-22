@@ -33,7 +33,8 @@ public class GameModel {
 	private List<Mob> polygons;
 	private QuadTree q;
 	private List<Mob> allPhysicalEntities;
-	private static float GRAVITY_RADIUS = 200F;
+	private static float GRAVITY_INCREASE = 50F;
+	private static float gravityRadius = 200F;
 	private static float MAX_SUCTION_ACCEL = 50F;
 	private static float FRICTION_CONSTANT = 20F;
 	private static int MAP_MOVEMENT_SPEED = 15;
@@ -55,6 +56,10 @@ public class GameModel {
 	private float gravityAngleSpeed;
 	private final static float tpi = (float) (2*Math.PI);
 	private Vector previousMousePosition;
+	private boolean keyTyped;
+	private char keyTypedChar;
+	private boolean gravityDirection;
+	private int gravityStrength;
 	
 	
 	public GameModel(ScreenManager manager,Dimension screenDims) {
@@ -76,6 +81,10 @@ public class GameModel {
 	}
 	
 	private void initialize() {
+		keyTyped = false;
+		keyTypedChar = 0;
+		gravityStrength = 1;
+		gravityDirection = true;
 		gravityAngle = 0F;
 		gravityAngleSpeed = tpi/256F;
 		previousMousePosition = new Vector();
@@ -163,6 +172,9 @@ public class GameModel {
 			if (e.getType() == InputEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				manager.addScreen(new OptionsScreen(manager,false,this));
 				isPaused = true;
+			} else if (e.getType() == InputEvent.KEY_TYPED) {
+				keyTyped = true;
+				keyTypedChar = e.getKeyChar();
 			}
 		}
 	}
@@ -195,6 +207,46 @@ public class GameModel {
 				cameraVelocity = Vector.add(new Vector(0,MAP_MOVEMENT_SPEED),cameraVelocity);
 			}
 		}
+		if (keyTyped) {
+			keyTyped = false;
+			switch (keyTypedChar) {
+			case '`':
+			case '~':
+				gravityDirection = !gravityDirection;
+				break;
+			case '1':
+				gravityStrength = 1;
+				break;
+			case '2':
+				gravityStrength = 2;
+				break;
+			case '3':
+				gravityStrength = 3;
+				break;
+			case '4':
+				gravityStrength = 4;
+				break;
+			case '5':
+				gravityStrength = 5;
+				break;
+			case '6':
+				gravityStrength = 6;
+				break;
+			case '7':
+				gravityStrength = 7;
+				break;
+			case '8':
+				gravityStrength = 8;
+				break;
+			case '9':
+				gravityStrength = 9;
+				break;
+			case '0':
+				gravityStrength = 10;
+				break;
+			}
+			gravityRadius = GRAVITY_INCREASE*gravityStrength;
+		}
 	}
 	
 	private Vector predictMousePosition(float interpol) {
@@ -215,7 +267,7 @@ public class GameModel {
 		for (Mob m : allPhysicalEntities) {
 			disp = Vector.displacement( m.getPosition(),source);
 			mag = Vector.mag(disp);
-			if (mag < GRAVITY_RADIUS) {
+			if (mag < gravityRadius) {
 				affectedEntities.add(m);
 				mags.add(mag);
 				disps.add(disp);
@@ -224,7 +276,7 @@ public class GameModel {
 		
 		for (int i = 0; i < affectedEntities.size(); i++) {
 			mag = mags.get(i);
-			affectedEntities.get(i).applyAccel(Vector.scalar(MAX_SUCTION_ACCEL/(mag),Vector.normalize(disps.get(i))));
+			affectedEntities.get(i).applyAccel(Vector.scalar(((gravityDirection)?1F:-1F)*MAX_SUCTION_ACCEL/(mag),Vector.normalize(disps.get(i))));
 		}
 	}
 	
@@ -447,10 +499,10 @@ public class GameModel {
 		Vector drawPosition = mousePosition;
 		
 		g.setColor(Color.WHITE);
-		g.drawArc((int)(drawPosition.x - GRAVITY_RADIUS), (int)(drawPosition.y - GRAVITY_RADIUS), (int)GRAVITY_RADIUS*2, (int)GRAVITY_RADIUS*2, 0, 360);
+		g.drawArc((int)(drawPosition.x - gravityRadius), (int)(drawPosition.y - gravityRadius), (int)gravityRadius*2, (int)gravityRadius*2, 0, 360);
 		Composite old = g.getComposite();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,.1F));
-		g.fillArc((int)(drawPosition.x - GRAVITY_RADIUS), (int)(drawPosition.y - GRAVITY_RADIUS), (int)GRAVITY_RADIUS*2, (int)GRAVITY_RADIUS*2, 0, 360);
+		g.fillArc((int)(drawPosition.x - gravityRadius), (int)(drawPosition.y - gravityRadius), (int)gravityRadius*2, (int)gravityRadius*2, 0, 360);
 		g.setComposite(old);
 //		float interpolGravityAngle = gravityAngle + interpol*gravityAngleSpeed;
 //		Vector[] points = new Vector[NUM_GRAVITY_LINES*2];

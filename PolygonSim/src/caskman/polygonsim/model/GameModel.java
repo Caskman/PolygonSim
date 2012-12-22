@@ -1,6 +1,8 @@
 package caskman.polygonsim.model;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -8,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import caskman.polygonsim.Profiler;
 import caskman.polygonsim.model.entities.Dot;
 import caskman.polygonsim.model.entities.DynamicPolygon;
 import caskman.polygonsim.model.entities.Explosion;
@@ -16,6 +17,7 @@ import caskman.polygonsim.model.entities.Mob;
 import caskman.polygonsim.screens.InputEvent;
 import caskman.polygonsim.screens.OptionsScreen;
 import caskman.polygonsim.screens.ScreenManager;
+import caskman.polygonsim.Parameters;
 
 
 public class GameModel {
@@ -35,6 +37,9 @@ public class GameModel {
 	private static float MAX_SUCTION_ACCEL = 50F;
 	private static float FRICTION_CONSTANT = 20F;
 	private static int MAP_MOVEMENT_SPEED = 15;
+	private static int BACKGROUND_SPACING = 100;
+	private static float BACKGROUND_OPACITY = 1F;
+	private static float BACKGROUND_DEPTH = .6F;
 	private Vector cameraPosition;
 	private Vector cameraVelocity;
 	private Vector mousePosition;
@@ -364,32 +369,49 @@ public class GameModel {
 		
 	}
 	
+	private void drawBackgroundPattern(Graphics2D g, float interpol, Vector offset) {
+		Vector position = Vector.scalar(BACKGROUND_DEPTH,Vector.subtract(new Vector(), offset));
+		Composite old = g.getComposite();
+		
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, BACKGROUND_OPACITY));
+		// draw vertical lines
+		g.setColor(Parameters.BACKGROUND_COLOR);
+		for (int mark = BACKGROUND_SPACING - ((int)position.x%BACKGROUND_SPACING); mark < screenDims.width; mark += BACKGROUND_SPACING) {
+			g.drawLine(mark, 0, mark, screenDims.height-1);
+		}
+		
+		// draw horizontal lines
+		for (int mark = BACKGROUND_SPACING - ((int)position.y%BACKGROUND_SPACING); mark < screenDims.height; mark += BACKGROUND_SPACING) {
+			g.drawLine(0, mark, screenDims.width-1, mark);
+		}
+		
+		g.setComposite(old);
+	}
+	
 	public void draw(Graphics2D g,float interpol) {
 		if (isPaused)
 			interpol = 0F;
-//		Profiler.start();
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, screenDims.width, screenDims.height);
-//		Profiler.lapRestart("Draw Black Background");
+		
+		
 		Vector offset = calcMapScreenOffset(interpol);
-//		Profiler.lapRestart("Calc Offset");
+		
+		drawBackgroundPattern(g,interpol,offset);
+		
 		for (Mob m : dots) {
 			if (isWithinScreen(m))
 				m.drawMob(g,interpol,offset);
 		}
-//		Profiler.lapRestart("Draw Dots");
 		for (Mob m : polygons) {
 			if (isWithinScreen(m))
 				m.drawMob(g,interpol,offset);
 		}
-//		Profiler.lapRestart("Draw Polygons");
 		for (Mob m : explosions) {
 			if (isWithinScreen(m))
 				m.drawMob(g,interpol,offset);
 		}
-//		Profiler.lapRestart("Draw Explosions");
 //		drawMouseInput(g,interpol);
-//		Profiler.lapRestart("Draw Mouse Input");
 //		q.draw(g);
 	}
 	

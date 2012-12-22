@@ -108,7 +108,7 @@ public class OptionsScreen extends GameScreen {
 					@Override
 					public void selectionMade(int selection) {
 						try {
-							Parameters.LINE_COLOR = Parameters.string2Color(Parameters.getBackgroundColorChoices()[selection]);
+							Parameters.BACKGROUND_COLOR = Parameters.string2Color(Parameters.getBackgroundColorChoices()[selection]);
 							Parameters.save();
 						} catch (Exception e) {
 							

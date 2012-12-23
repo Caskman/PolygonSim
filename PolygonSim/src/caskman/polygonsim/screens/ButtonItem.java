@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.List;
 
+import caskman.polygonsim.Parameters;
 import caskman.polygonsim.Profiler;
 import caskman.polygonsim.model.Vector;
 
@@ -41,7 +42,7 @@ public class ButtonItem extends Item {
 			textSize = size;
 		}
 		
-		public void addOptionItemListener(ButtonItemListener l) {
+		public void addButtonItemListener(ButtonItemListener l) {
 			listeners.add(l);
 		}
 		
@@ -67,7 +68,7 @@ public class ButtonItem extends Item {
 			g.fillRect((int)position.x, (int)position.y, dims.width, dims.height);
 			//Profiler.lapRestart("Draw Fill");
 			
-			g.setColor(Color.WHITE);
+			g.setColor(Parameters.ACCENT_COLOR);
 			g.drawRect((int)position.x, (int)position.y, dims.width, dims.height);
 			//Profiler.lapRestart("Draw Border");
 			

@@ -35,7 +35,7 @@ public class SelectionScreen extends GameScreen {
 			i.setText(choices[k]);
 			i.setDims(new Dimension(100,50));
 			i.setTextSize(20);
-			i.addOptionItemListener(new SelectionListener(k));
+			i.addButtonItemListener(new SelectionListener(k));
 			panel.add(i);
 		}
 		
@@ -44,7 +44,7 @@ public class SelectionScreen extends GameScreen {
 		cancelButton.setTextSize(20);
 		cancelButton.setDims(new Dimension(150,30));
 		cancelButton.setPosition(new Vector((manager.getScreenDims().width - cancelButton.getDims().width)/2,9*manager.getScreenDims().height/16));
-		cancelButton.addOptionItemListener(new ButtonItemListener() {
+		cancelButton.addButtonItemListener(new ButtonItemListener() {
 			@Override
 			public void itemActivated() {
 				exitScreen();

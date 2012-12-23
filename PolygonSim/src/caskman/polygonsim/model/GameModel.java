@@ -33,7 +33,7 @@ public class GameModel {
 	private List<Mob> polygons;
 	private QuadTree q;
 	private List<Mob> allPhysicalEntities;
-	private static float GRAVITY_INCREASE = 50F;
+	private static float GRAVITY_INCREMENT = 100F;
 	private static float gravityRadius = 200F;
 	private static float MAX_SUCTION_ACCEL = 50F;
 	private static float FRICTION_CONSTANT = 20F;
@@ -245,7 +245,7 @@ public class GameModel {
 				gravityStrength = 10;
 				break;
 			}
-			gravityRadius = GRAVITY_INCREASE*gravityStrength;
+			gravityRadius = GRAVITY_INCREMENT*gravityStrength;
 		}
 	}
 	
@@ -498,7 +498,7 @@ public class GameModel {
 			return;
 		Vector drawPosition = mousePosition;
 		
-		g.setColor(Color.WHITE);
+		g.setColor(Parameters.ACCENT_COLOR);
 		g.drawArc((int)(drawPosition.x - gravityRadius), (int)(drawPosition.y - gravityRadius), (int)gravityRadius*2, (int)gravityRadius*2, 0, 360);
 		Composite old = g.getComposite();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,.1F));

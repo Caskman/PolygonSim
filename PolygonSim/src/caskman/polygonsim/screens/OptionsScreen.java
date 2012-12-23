@@ -57,7 +57,7 @@ public class OptionsScreen extends GameScreen {
 		i = new ButtonItem();
 		i.setTextSize(20);
 		i.setText("Change Dot Color");
-		i.addOptionItemListener(new ButtonItemListener() {
+		i.addButtonItemListener(new ButtonItemListener() {
 			@Override
 			public void itemActivated() {
 				manager.addScreen(new SelectionScreen(manager,false,Parameters.getDotColorChoices(),new SelectionAction() {
@@ -79,7 +79,7 @@ public class OptionsScreen extends GameScreen {
 		i = new ButtonItem();
 		i.setTextSize(20);
 		i.setText("Change Line Color");
-		i.addOptionItemListener(new ButtonItemListener() {
+		i.addButtonItemListener(new ButtonItemListener() {
 			@Override
 			public void itemActivated() {
 				manager.addScreen(new SelectionScreen(manager,false,Parameters.getLineColorChoices(),new SelectionAction() {
@@ -101,7 +101,7 @@ public class OptionsScreen extends GameScreen {
 		i = new ButtonItem();
 		i.setText("Change Background Color");
 		i.setTextSize(20);
-		i.addOptionItemListener(new ButtonItemListener() {
+		i.addButtonItemListener(new ButtonItemListener() {
 			@Override
 			public void itemActivated() {
 				manager.addScreen(new SelectionScreen(manager,false,Parameters.getBackgroundColorChoices(),new SelectionAction() {
@@ -121,10 +121,33 @@ public class OptionsScreen extends GameScreen {
 		sp.add(i);
 		
 		i = new ButtonItem();
+		i.setText("Change Accent Color");
+		i.setTextSize(20);
+		i.addButtonItemListener(new ButtonItemListener() {
+			@Override
+			public void itemActivated() {
+				manager.addScreen(new SelectionScreen(manager,false,Parameters.getAccentColorChoices(),new SelectionAction() {
+					@Override
+					public void selectionMade(int selection) {
+						try {
+							Parameters.ACCENT_COLOR = Parameters.string2Color(Parameters.getAccentColorChoices()[selection]);
+							Parameters.save();
+						} catch (Exception e) {
+							
+						}
+					}
+				}));
+			}
+		});
+		i.setDims(new Dimension(275,30));
+		sp.add(i);
+		
+		
+		i = new ButtonItem();
 		i.setText("Exit");
 		i.setDims(new Dimension(100,20));
 		i.setTextSize(20);
-		i.addOptionItemListener(new ButtonItemListener() {
+		i.addButtonItemListener(new ButtonItemListener() {
 			@Override
 			public void itemActivated() {
 				Launcher.exit();
@@ -182,7 +205,6 @@ public class OptionsScreen extends GameScreen {
 			i.manageInput(e);
 		}
 	}
-
 
 	@Override
 	public boolean isFullscreen() {

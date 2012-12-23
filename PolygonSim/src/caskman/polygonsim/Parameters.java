@@ -11,11 +11,12 @@ import java.util.regex.PatternSyntaxException;
 
 public class Parameters {
 	
-	final static int PARAMETER_COUNT = 4;
+	final static int PARAMETER_COUNT = 5;
 	public static boolean WINDOWED;
 	public static Color DOT_COLOR;
 	public static Color LINE_COLOR;
 	public static Color BACKGROUND_COLOR;
+	public static Color ACCENT_COLOR;
 	private static String homeDir = System.getProperty("user.home") + File.separator;
 	private static String gameDir = homeDir + "PolygonSim" + File.separator;
 	private static String parameterDir = gameDir + "params" + File.separator;
@@ -105,6 +106,9 @@ public class Parameters {
 		case BACKGROUND_COLOR:
 			out.write(color2String(BACKGROUND_COLOR));
 			break;
+		case ACCENT_COLOR:
+			out.write(color2String(ACCENT_COLOR));
+			break;
 			default: throw new Exception();
 		}
 	}
@@ -114,6 +118,7 @@ public class Parameters {
 		DOT_COLOR = Color.RED;
 		LINE_COLOR = Color.GREEN;
 		BACKGROUND_COLOR = Color.YELLOW;
+		ACCENT_COLOR = new Color(0xff4800);
 	}
 	
 	private static boolean loadParameter(String line) {
@@ -142,6 +147,9 @@ public class Parameters {
 				break;
 			case BACKGROUND_COLOR:
 				BACKGROUND_COLOR = string2Color(parts[1]);
+				break;
+			case ACCENT_COLOR:
+				ACCENT_COLOR = string2Color(parts[1]);
 				break;
 			}
 		} catch (Exception e) {
@@ -172,8 +180,6 @@ public class Parameters {
 			return ColorCode.Yellow;
 		else if (c == Color.CYAN)
 			return ColorCode.Cyan;
-		else if (c == Color.GRAY)
-			return ColorCode.Gray;
 		else if (c == Color.MAGENTA)
 			return ColorCode.Magenta;
 		else if (c == Color.PINK)
@@ -202,8 +208,6 @@ public class Parameters {
 			return Color.YELLOW;
 		case Cyan:
 			return Color.CYAN;
-		case Gray:
-			return Color.GRAY;
 		case Magenta:
 			return Color.MAGENTA;
 		case Pink:
@@ -249,16 +253,20 @@ public class Parameters {
 		return getColorCodeChoices();
 	}
 	
+	public static String[] getAccentColorChoices() {
+		return getColorCodeChoices();
+	}
+	
 	public static String[] getBackgroundColorChoices() {
 		return getColorCodeChoices();
 	}
 	
 	private enum ParameterCode {
-		WINDOWED,DOT_COLOR,LINE_COLOR,BACKGROUND_COLOR,NO_CODE
+		WINDOWED,DOT_COLOR,LINE_COLOR,BACKGROUND_COLOR,ACCENT_COLOR,NO_CODE
 	}
 	
 	private enum ColorCode {
-		Red,Blue,Green,Orange,Yellow,Cyan,Gray,Magenta,Pink,White
+		Red,Blue,Green,Orange,Yellow,Cyan,Magenta,Pink,White
 	}
 	
 }

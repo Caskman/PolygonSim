@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.List;
 
+import caskman.polygonsim.Parameters;
 import caskman.polygonsim.model.Vector;
 
 public class LabelItem extends Item {
@@ -42,7 +43,7 @@ public class LabelItem extends Item {
 		public void draw(Graphics2D g,float interpol) {
 //			if (position == null)
 //				updateDimsandPositions();
-			g.setColor(Color.WHITE);
+			g.setColor(Parameters.ACCENT_COLOR);
 			g.setFont(getFont());
 			updateTextPosition(g.getFontMetrics());
 			

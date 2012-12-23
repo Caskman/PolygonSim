@@ -4,20 +4,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.css.Rect;
-
-import caskman.polygonsim.model.Vector;
 import caskman.polygonsim.Launcher;
+import caskman.polygonsim.model.Vector;
+import caskman.polygonsim.screens.ButtonItem.ButtonItemListener;
 
 
 public class MainMenuScreen extends GameScreen {
 	
-	private List<MenuItem> menuItems;
+	private List<Item> menuItems;
 	
 	public MainMenuScreen(ScreenManager manager) {
 		super(manager,false);
@@ -25,18 +22,15 @@ public class MainMenuScreen extends GameScreen {
 	}
 	
 	private void initialize() {
-		menuItems = new ArrayList<MenuItem>();
-		MenuItem m;
+		menuItems = new ArrayList<Item>();
+		Item m;
 		
-		m = new MenuItem();
-		m.text = "Start";
-		m.setTextSize(20);
-		m.isButton = true;
-//		m.dims = new Dimension(100,50);
-		m.dims = null;
-		m.position = null;
-		m.centerPosition = new Vector(manager.getScreenDims().width/2,2*(manager.getScreenDims().height)/3);
-		m.addMenuItemListener(new MenuItemListener() {
+		m = new ButtonItem();
+		((ButtonItem)m).setText("Start");
+		((ButtonItem)m).setTextSize(20);
+		((ButtonItem)m).setDims(new Dimension(100,30));
+		((ButtonItem)m).setPosition(new Vector((manager.getScreenDims().width - ((ButtonItem)m).getDims().width)/2,3*manager.getScreenDims().height/4));
+		((ButtonItem)m).addButtonItemListener(new ButtonItemListener() {
 			public void itemActivated() {
 				GameScreen[] screens = {new MainGameScreen(manager,true)};
 				LoadingScreen.load(manager,screens,false);
@@ -44,16 +38,13 @@ public class MainMenuScreen extends GameScreen {
 		});
 		menuItems.add(m);
 		
-		m = new MenuItem();
-		m.text = "PolygonSim";
-		m.setTextColor(Color.GREEN);
-		m.isButton = false;
-		m.setTextSize(50);
+		m = new LabelItem();
+		((LabelItem)m).setText("PolygonSim");
+		((LabelItem)m).setTextSize(50);
 //		Rect r = m.getTextBounds();
 //		m.dims = new Dimension(r.width(),r.height());
-		m.dims = null;
-		m.position = null;
-		m.centerPosition = new Vector(manager.getScreenDims().width/2,(manager.getScreenDims().height)/4);
+		((LabelItem)m).setDims(new Dimension(200,50));
+		((LabelItem)m).setPosition(new Vector((manager.getScreenDims().width - ((LabelItem)m).getDims().width)/2,manager.getScreenDims().height/4));
 		menuItems.add(m);
 		
 	}
@@ -68,7 +59,7 @@ public class MainMenuScreen extends GameScreen {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, manager.getScreenDims().width, manager.getScreenDims().height);
 //		Vector zero = new Vector();
-		for (MenuItem m : menuItems) {
+		for (Item m : menuItems) {
 			m.draw(g,interpol);
 		}
 	}
@@ -79,7 +70,7 @@ public class MainMenuScreen extends GameScreen {
 			if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 				Launcher.exit();
 		}
-		for (MenuItem m : menuItems) {
+		for (Item m : menuItems) {
 			m.manageInput(e);
 		}
 	}

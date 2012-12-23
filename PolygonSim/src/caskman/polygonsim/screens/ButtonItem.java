@@ -64,7 +64,7 @@ public class ButtonItem extends Item {
 			}
 			//Profiler.lapRestart("Intialize");
 			
-			g.setColor((isPressed)?Color.WHITE:Color.BLACK);
+			g.setColor((isPressed)?Parameters.ACCENT_COLOR:Color.BLACK);
 			g.fillRect((int)position.x, (int)position.y, dims.width, dims.height);
 			//Profiler.lapRestart("Draw Fill");
 			
